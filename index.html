@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store1-13Feb</title>
+
+    <style>
+      @keyframes showMessage {
+        0% {
+          opacity: 0.8;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes moveShrink {
+        0% {
+          transform: translate(0, 0) scale(1);
+        }
+        50% {
+          transform: translate(100vw, -100vh) scale(0.05);
+          /*transform: translate(calc(100% - var(--button-width)), calc(-100% + var(--button-height))); /* Move to top right corner 
+          transform-origin: top right; /* Shrink from top right corner 
+          scale: 0.05; /* Shrink to 5% */
+        }
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+      }
+      
+      .add2Cart.clicked {
+        animation: moveShrink 1s ease-in-out forwards;
+      }
+      
+      body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 2px;
+        box-sizing: border-box;
+        background-color: #111;
+        position: relative;
+      }
+      /*      @keyframes enlargeAndMove {
+      0% {transform: scale(1) translate(0, 0);}
+      25% {transform: scale(2.5) translate(0, 0);}
+      50% { transform: scale(0.1) translate(100%, -100%);}
+      75% { transform: scale(0.1) translate(100%, -100%);
+        display: none;}
+      100% { transform: scale(1) translate(0, 0);
+        display: block;}
+      }*/
+  
+      button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        cursor: pointer;
+        border: 2px solid #3498db; /* Border color */
+        background: #d00;
+        border-radius: 12px; /* Rounded corners */
+        transition: background-color 0.3s, color 0.3s; /* Smooth transition on hover */
+        animation: enlargeAndMove 4s ease-in-out; /* Apply animation */
+      }
+  
+      button:hover {
+        background-color: #3498db; /* Change background color on hover */
+        color: #ffffff; /* Change text color on hover */
+      }
+      #cart {
+        display: none;
+  
+      }
+      #cart-icon {
+          position: fixed;
+          top: 20px;
+          right: 10px;
+          background-image: url(images/cart.svg);
+          background-size: 2.8rem 2.8rem;
+          background-color: #3498db;
+          background-position: center center;
+          background-repeat: no-repeat;
+          color: #fff;
+          padding: 10px;
+          border-radius: 50%;
+          cursor: pointer;
+          width: 3rem; 
+          height: 3rem;
+          z-index: 1;
+          
+      }
+  
+      #cart-close {
+        display: none;
+        position: absolute;
+        top: -20%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 3rem;
+        color: red;
+        background-color: #444;
+        z-index: 3;
+        border-radius: 50%;
+        padding: 5px 20px;
+      }
+      #cart-icon:hover {
+        background-color: #294089;
+      }
+  
+      #cart-count {
+        display: inline-block;
+        background-color: red;
+        color: #ccc;
+        font-size: 12px;
+        padding: 2px 5px;
+        border-radius: 50%;
+      }
+  
+      #cart-total {
+        display: block;
+        background-color: red;
+        opacity: 0.5;
+        font-size: 14px;
+        margin-top: 5px;
+      }
+      
+      #checkout-page {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+      }
+  
+      #checkout-page.hidden {
+        display: none;
+      }
+  
+      h3 {
+        margin: 0;
+        padding: 0;
+      }
+  
+      label {
+      width: 100%;
+      display: block; /* Display as block */
+      border: 1px solid black;
+      margin: 5px;
+      padding: 5px; /* Add padding for better appearance */
+      }
+  
+      #category-nav {
+        position: sticky;
+        width: 90%;
+        top: 1px;
+        height: 3rem;
+        overflow-x: auto;
+        white-space: nowrap;
+        background-color: #315;
+        display: flex;
+      }
+  
+      #category-nav a {
+        display: inline-block;
+        padding: 14px 16px;
+        color: white;
+        text-align: center;
+        text-decoration: unset;
+        font-size: 16 px;
+      }
+  
+      #category-nav a:hover {
+        background-color: #d00;
+        color: black;
+      }
+      .message-box {
+        /*display: flex;*/
+        justify-content: center;
+        align-items: center;
+        display: none;
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 10px;
+        width: 10rem;
+        height: 4rem;
+        background-color: #2222f2;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        animation: showMessage 1.5s ease-in-out forwards;
+        z-index: 2;
+      }
+      .move-to-top-right {
+        position: relative;
+        animation: moveToTopRight 2s;
+      }
+      #product-container {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          padding: 10px;
+      }
+  
+      .product-img {
+          width: 10rem;
+          height: 8rem;
+      }
+      .product-card {
+          border: 2px solid #ddd;
+          border-radius: 8px;
+          margin: 10px;
+          padding: 15px;
+          width: 300px;
+          box-shadow: 0 0 10px rgb(255, 0, 149); /* Blue shadow */
+      }
+      
+      #store-front {
+        justify-content: center;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        /*height: 100vh;  Adjust as needed */
+      }
+  
+      #store-banner {
+        /*overflow-x: auto;*/
+        width: 40%;
+        height: 8rem;
+        border: 1px solid rgba(245, 241, 7, 0.815);
+      }
+  
+      #store-info {
+        /*hdisplay: flex;
+        flex-direction: column;*/
+        width: 30vw;
+        /*height: 100vh;  Adjust the height as needed */
+      }
+  
+      #store-logo {
+        /*overflow-x: auto;
+        align-self: flex-end;*/
+        vertical-align: middle;
+        margin-top: 1rem;
+        width: 6rem; 
+        height: 6rem;
+        border: 1px solid rgba(245, 241, 7, 0.815); /* Corrected the border property */
+      }
+  
+      #store-address {
+        margin: 8px 4px 2px 4px
+      }
+  
+      #store-web {
+        margin: 8px 4px 2px 4px; /* 2px gap between elements */
+      }
+      #store-wsphone {
+        margin: 8px 2px 4px 2px; /* 2px gap between elements */
+        display: block;
+      }
+  
+    /*To do - style store front to vertical*/
+      @media only screen and (max-width: 500px) {
+        #store-front {
+          text-align: center;
+          /*display: block;
+          align-items: center;
+          justify-content: center;
+          flex-wrap: wrap;flex-direction: row;
+          height: 100vh;  Adjust as needed */
+        }
+        #store-banner {
+          /*overflow-x: auto;*/
+          width: 80vw;
+          height: 8rem;
+        }
+  
+        #store-info {
+          /*hdisplay: flex;
+          flex-direction: column;*/
+          width: 70vw;
+          /*height: 100vh;  Adjust the height as needed */
+        }
+  
+        #store-logo {
+          justify-content: center;
+          align-items: center;
+          width: 6rem; 
+          height: 6rem;
+          border: 1px solid rgba(245, 241, 7, 0.815); /* Corrected the border property */
+        }
+          #category-nav {
+            width: 90%;
+          }
+      }
+      </style>
+</head>
+<body>
+    <div id="cart-icon">
+        <span id="cart-count">0</span>
+        <p id="cart-close"> X </p>
+        <span id="cart-total">$0.00</span>
+    </div>
+      <div id="cart">
+      <!-- Cart details will be displayed here using JavaScript -->
+    </div>
+    <!-- Checkout Page -->
+    <div id="checkout-page" class="hidden">
+      <!-- ... Checkout page content ... -->
+    </div>
+    <div id="store-front">
+      
+    </div>
+      <nav id="category-nav">
+          <!-- Navigation tabs dynamically created from category values -->
+      </nav>
+  
+      <div id="product-container">
+          <!-- Product cards dynamically created here -->
+      </div>
+      <div class="message-box">Successfully added to cart!</div>
+    <script>
+    const stores = [
+        { "StoreId": 1,
+        "StoreName": "Mom's Burgers",
+        "StoreAddress": "156 Orchard Road, Singapore",
+        "LogoImg": "images/logo1.jpg",
+        "StoreWebsite": "www.bingsburgers.com",
+        "GeoLocation":"0,0",
+        "StorePhone": "+65 2345 6789",
+        "PromotionMessage": "Welcome to Bing's Burgers, where we serve the best burgers in town! Try our signature Bing Burger, made with 100% beef patty, cheese, lettuce, tomato, onion, and our Special sauce. Or choose from our variety of other burgers, salads, sandwiches, and sides. Don't forget to add a drink and a Dessert to complete your meal. For a limited time, enjoy our Promotion of 10% off any burger combo. Hurry, this offer won't last long!",
+        "Categories": ["All", "Lunch", "Dinner", "Promotion", "Special"],
+        "Products": [
+        { "Id": "AA01",
+            "ProductName": "Bing Burger",
+            "ProductImg" : "images/img1.jpg",
+            "Description": "Our signature burger, made with 100% beef patty, cheese, lettuce, tomato, onion, and our Special sauce. Served with fries and a drink of your choice.",
+            "Categories": ["All", "Lunch", "Dinner", "Promotion"],
+            "Price": 6.88,
+            "Options": {
+            "Dessert": [{ "Dessert1": 2.00 ,  "Dessert2": 3.20 } ], 
+            "AddOn": [{ "AddOn1": 0.50 ,  "AddOn2": 2.00 ,  "AddOn3": 3.20 , "AddOn4": 2.10 ,  "AddOn5": 1.20 }],
+            "Drink": [{ "Coke1": 1.00 , "Drink2": 4.00, "Drink3": 0.50, "Drink4": 0.00}]
+            },
+            "Diet": ["HighProtein"]
+        },
+        {"Id": "AA02",
+            "ProductName": "Veggie Burger",
+            "ProductImg" : "images/img2.jpg",
+            "Description": "A delicious Vegetarian option, made with a soy-based patty, cheese, lettuce, tomato, onion, and our Special sauce. Served with fries and a drink of your choice.",
+            "Categories": ["All", "Lunch", "Dinner", "Special"],
+            "Price": 6.90,
+            "Options": {
+            "Drink": [{"Coke2": 1.00, "Drink2": 4.00, "Drink3": 0.50, "Drink4": 0.00}],          
+            "Dessert": [{"Dessert1": 2.00, "Dessert2": 3.20}],
+            "AddOn": [{ "AddOn1": 0.50, "AddOn2": 2.00, "AddOn3": 3.20, "AddOn4": 2.10, "AddOn5": 1.20}]
+            },
+            "Diet": ["Vegetarian", "LowCarbo/Sugar"]
+        },
+        {"Id": "AA03",
+            "ProductName": "Chicken Burger",
+            "ProductImg" : "images/img3.jpg",
+            "Description": "A juicy chicken patty, cheese, lettuce, tomato, onion, and our Special sauce. Served with fries and a drink of your choice.",
+            "Categories": ["All", "Lunch", "Dinner"],
+            "Price": 4.50,
+            "Options": {
+            "Drink": [{"Coke3": 1.00, "Drink2": 4.00, "Drink3": 0.50, "Drink4": 0.00}],
+            "Dessert": [{"Dessert1": 2.00, "Dessert2": 3.20}],
+            "AddOn": [{"AddOn1": 0.50, "AddOn2": 2.00, "AddOn3": 3.20, "AddOn4": 2.10, "AddOn5": 1.20}]
+            },
+            "Diet": ["HighProtein"]
+        },
+        {"Id": "AA04",
+            "ProductName": "Fish Burger",
+            "ProductImg" : "images/img4.jpg",
+            "Description": "A crispy fish fillet, cheese, lettuce, tomato, onion, and our Special sauce. Served with fries and a drink of your choice.",
+            "Categories": ["All", "Lunch", "Dinner"],
+            "Price": 3.90,
+            "Options": {
+            "Drink": [{"Coke4": 1.00,"Drink2": 4.00,"Drink3": 0.50,"Drink4": 0.00}],
+            "Dessert": [{"Dessert1": 2.00,"Dessert2": 3.20}],
+            "AddOn": [{"AddOn1": 0.50,"AddOn2": 2.00,"AddOn3": 3.20,"AddOn4": 2.10,"AddOn5": 1.20}]
+            },
+            "Diet": ["LowCarbo/Sugar"]
+        },
+        {"Id": "AA05",
+            "ProductName": "Cheeseburger",
+            "ProductImg" : "images/img5.jpg",
+            "Description": "A classic burger, made with 100% beef patty, double cheese, lettuce, tomato, onion, and our Special sauce. Served with fries and a drink of your choice.",
+            "Categories": ["All", "Lunch", "Dinner"],
+            "Price": 6.00,
+            "Options": {
+            "Drink": [{"Coke5": 1.00,"Drink2": 4.00,"Drink3": 0.50,"Drink4": 0.00}],
+            "Dessert": [{"Dessert1": 2.00,"Dessert2": 3.20}],
+            "AddOn": [{"AddOn1": 0.50,"AddOn2": 2.00,"AddOn3": 3.20,"AddOn4": 2.10,"AddOn5": 1.20}]
+            },
+            "Diet": ["HighProtein"]
+        },
+        {"Id": "AA06",
+            "ProductName": "Bacon Burger",
+            "ProductImg" : "images/img6.jpg",
+            "Description": "A mouthwatering burger, made with 100% beef patty, bacon, cheese, lettuce, tomato, onion, and our Special sauce. Served with fries and a drink of your choice.",
+            "Categories": ["All", "Lunch", "Dinner", "Special"],
+            "Price": 6.10,
+            "Options": {
+            "Drink": [{"Coke6": 1.00,"Drink2": 4.00,"Drink3": 0.50,"Drink4": 0.00}],
+            "Dessert": [{"Dessert1": 2.00,"Dessert2": 3.20}],
+            "AddOn": [{"AddOn1": 0.50,"AddOn2": 2.00,"AddOn3": 3.20,"AddOn4": 2.10,"AddOn5": 1.20}]
+            },
+            "Diet": ["HighProtein"]
+        },
+        {"Id": "AA07",
+            "ProductName": "Mushroom Burger",
+            "ProductImg" : "images/img7.jpg",
+            "Description": "A savory burger, made with 100% beef patty, mushroom, cheese, lettuce, tomato, onion, and our Special sauce. Served with fries and a drink of your choice.",
+            "Categories": ["All", "Lunch", "Dinner"],
+            "Price": 6.20,
+            "Options": {
+            "Drink": [{"Coke7": 1.00,"Drink2": 4.00,"Drink3": 0.50,"Drink4": 0.00}], 
+            "Dessert": [{"Dessert1": 2.00,"Dessert2": 3.20}],
+            "AddOn": [{"AddOn1": 0.50,"AddOn2": 2.00,"AddOn3": 3.20,"AddOn4": 2.10,"AddOn5": 1.20}]
+            },
+            "Diet": ["LowCarbo/Sugar"]
+        },
+        {"Id": "AA08",
+            "ProductName": "Salad",
+            "ProductImg" : "images/img8.jpg",
+            "Description": "A fresh and healthy salad, made with lettuce, tomato, cucumber, carrot, cheese, and your choice of dressing. Served with a drink of your choice.",
+            "Categories": ["All", "Breakfast", "Lunch", "Dinner", "Special"],
+            "Price": 6.40,
+            "Options": {
+            "Drink": [{"Coke8": 1.00,"Drink2": 4.00,"Drink3": 0.50,"Drink4": 0.00}], 
+            "Dressing": [{"Dressing1": 0.00,"Dressing2": 0.50,"Dressing3": 0.50,"Dressing4": 0.50}], 
+            "AddOn": [{"AddOn1": 0.50,"AddOn2": 2.00,"AddOn3": 3.20,"AddOn4": 2.10,"AddOn5": 1.20}]
+            },
+            "Diet": ["Vegetarian", "LowCarbo/Sugar"]
+        },
+        {"Id": "AA09",
+            "ProductName": "Sandwich",
+            "ProductImg" : "images/img9.jpg",
+            "Description": "A tasty sandwich, made with your choice of Bread, meat, cheese, and Vegetables. Served with fries and a drink of your choice.",
+            "Categories": ["All", "Breakfast", "Lunch", "Dinner"],
+            "Price": 4.20,
+            "Options": {
+            "Drink": [{"Coke9": 1.00,"Drink2": 4.00,"Drink3": 0.50,"Drink4": 0.00}],
+            "Bread": [{"Bread1": 0.00,"Bread2": 0.50,"Bread3": 0.50,"Bread4": 0.50}],
+            "Meat": [{"Meat1": 0.00,"Meat2": 1.00,"Meat3": 1.00,"Meat4": 1.00}],
+            "Cheese": [{"Cheese1": 0.00,"Cheese2": 0.50,"Cheese3": 0.50,"Cheese4": 0.50}],
+            "Vegetables": [{"Vegetables1": 0.00,"Vegetables2": 0.00,"Vegetables3": 0.00,"Vegetables4": 0.00}], 
+            "AddOn": [{"AddOn1": 0.50,"AddOn2": 2.00,"AddOn3": 3.20,"AddOn4": 2.10,"AddOn5": 1.20}]
+            },
+            "Diet": ["HighProtein"]
+        },
+        {"Id": "AA10",
+            "ProductName": "Wrap",
+            "ProductImg" : "images/img10.jpg",
+            "Description": "A delicious wrap, made with your choice of tortilla, meat, cheese, and Vegetables. Served with fries and a drink of your choice.",
+            "Categories": ["All", "Breakfast", "Lunch", "Dinner"],
+            "Price": 4.35,
+            "Options": {
+            "Drink": [{"Coke": 1.00,"Drink2": 4.00,"Drink3": 0.50,"Drink4": 0.00}],
+            "Tortilla": [{"Tortilla1": 0.00,"Tortilla2": 0.50,"Tortilla3": 0.50,"Tortilla4": 0.50}],
+            "Meat": [{"Meat1": 0.00,"Meat2": 1.00,"Meat3": 1.00,"Meat4": 1.00}],
+            "Cheese": [{"Cheese1": 0.00,"Cheese2": 0.50,"Cheese3": 0.50,"Cheese4": 0.50}],
+            "Vegetables": [{"Vegetables1": 0.00,"Vegetables2": 0.00,"Vegetables3": 0.00,"Vegetables4": 0.00}],
+            "AddOn": [{"AddOn1": 0.50,"AddOn2": 2.00,"AddOn3": 3.20,"AddOn4": 2.10,"AddOn5": 1.20}]
+            },
+            "Diet": ["HighProtein"]
+        }
+        ],
+        "OperationHours": {
+        "weekday": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "startTime": "8:00 AM",
+        "endTime": "10:00 PM"
+        }
+    },
+    {"StoreId": 2,
+        "StoreName": "Bing's Pizza",
+        "StoreAddress": "789 Beach Road, Singapore",
+        "LogoImg": "images/logo2.jpg",
+        "StoreWebsite": "www.bingspizza.com",
+        "GeoLocation":"2,2",
+        "StorePhone": "+65 3456 7890",
+        "PromotionMessage": "Welcome to Bing's Pizza, where we serve the best pizza in town! Try our classic Margherita, Pepperoni, Hawaiian, or Cheese pizzas, or create your own with our variety of toppings. Don't forget to add a salad, a side, and a drink to complete your meal. For a limited time, enjoy our Promotion of buy one get one free on any pizza. Hurry, this offer won't last long!",
+        "Categories": ["All", "Lunch", "Dinner", "Promotion", "Special"],
+        "Products": [
+        {"Id": 11,
+            "ProductName": "Margherita Pizza",
+            "ProductImg" : "images/img21.jpg",
+            "Description": "A classic pizza, made with tomato sauce, mozzarella cheese, and basil. Served with a drink of your choice.",
+            "Categories": ["All", "Lunch", "Dinner", "Promotion"],
+            "Price": 7.12,
+            "Options": {
+            "Drink": [{"Drink10": 1.00,"Drink2": 4.00,"Drink3": 0.50,"Drink4": 0.00}],
+            "Size": [{"Small": 8.00,"Medium": 10.00,"Large": 12.00}],
+            "Dessert": [{"Dessert1": 2.00, "Dessert2": 3.20}],
+            "AddOn": [{"AddOn1": 0.50,"AddOn2": 2.00,"AddOn3": 3.20,"AddOn4": 2.10,"AddOn5": 1.20}]
+            },
+            "Diet": ["LowCarbo/Sugar"]
+        },
+        {"Id": 12,
+            "ProductName": "Salad",
+            "ProductImg" : "images/img22.jpg",
+            "Description": "A fresh and healthy salad, made with lettuce, tomato, cucumber, carrot, cheese, and your choice of dressing. Served with a drink of your choice.",
+            "Categories": ["All", "Breakfast", "Lunch", "Dinner", "Special"],
+            "Price": 7.20,
+            "Options": {
+            "Drink": [{"Coke11": 1.00,"Drink2": 4.00,"Drink3": 0.50,"Drink4": 0.00}],
+            "Dressing": [{"Dressing1": 0.00,"Dressing2": 0.50,"Dressing3": 0.50,"Dressing4": 0.50}],
+            "AddOn": [{"AddOn1": 0.50,"AddOn2": 2.00,"AddOn3": 3.20,"AddOn4": 2.10,"AddOn5": 1.20}]
+            },
+            "Diet": ["Vegetarian", "LowCarbo/Sugar"]
+        },
+        {"Id": 13,
+            "ProductName": "Sandwich",
+            "ProductImg" : "images/img23.jpg",
+            "Description": "A tasty sandwich, made with your choice of Bread, meat, cheese, lettuce, tomato, onion, and our Special sauce. Served with fries and a drink of your choice.",
+            "Categories": ["All", "Breakfast", "Lunch", "Dinner"],
+            "Price": 7.30,
+            "Options": {
+            "Drink": [{"Coke11": 1.00,"Drink2": 4.00,"Drink3": 0.50,"Drink4": 0.00}],
+            "Bread": [{"Bread1": 0.00,"Bread2": 0.50,"Bread3": 0.50,"Bread4": 0.50}],
+            "Meat": [{"Meat1": 0.00,"Meat2": 1.00,"Meat3": 1.00,"Meat4": 1.00}],
+            "Cheese": [{"Cheese1": 0.00,"Cheese2": 0.50,"Cheese3": 0.50,"Cheese4": 0.50}],
+            "AddOn": [{"AddOn1": 0.50,"AddOn2": 2.00,"AddOn3": 3.20,"AddOn4": 2.10,"AddOn5": 1.20}]
+            },
+            "Diet": ["HighProtein"]
+        },
+        {"Id": 14,
+            "ProductName": "Wrap",
+            "ProductImg" : "images/img24.jpg",
+            "Description": "A delicious wrap, made with your choice of tortilla, meat, cheese, lettuce, tomato, onion, and our Special sauce. Served with fries and a drink of your choice.",
+            "Categories": ["All", "Breakfast", "Lunch", "Dinner"],
+            "Price": 5.40,
+            "Options": {
+            "Drink": [{"Coke12": 1.00,"Drink2": 4.00,"Drink3": 0.50,"Drink4": 0.00}],
+            "Tortilla": [{"Tortilla1": 0.00,"Tortilla2": 0.50,"Tortilla3": 0.50,"Tortilla4": 0.50}],
+            "Meat": [ { "Meat1": 0.00 , "Meat2": 1.00 , "Meat3": 1.00 , "Meat4": 1.00 } ],
+            "Cheese": [ { "Cheese1": 0.00 , "Cheese2": 0.50 , "Cheese3": 0.50 , "Cheese4": 0.50 } ],
+            "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ] 
+            },
+            "Diet": ["LowCarbo/Sugar"]
+        }
+        ],
+        "OperationHours": {
+        "weekday": "Monday to Sunday",
+        "startTime": "8:00 AM",
+        "endTime": "10:00 PM"
+        }
+    },
+    { "StoreId": 3,
+        "StoreName": "Big Fat Pizza",
+        "StoreAddress": "789 Bugis Street, Singapore",
+        "LogoImg": "images/logo3.jpg",
+        "StoreWebsite": "www.bingspizza.com",
+        "GeoLocation":"0,4",
+        "StorePhone": "+65 3456 7890",
+        "PromotionMessage": "Welcome to Bing's Pizza, where we serve the best pizza in town! Try our classic Margherita, made with tomato sauce, mozzarella cheese, and basil. Or choose from our variety of other pizzas, pastas, salads, and sides. Don't forget to add a drink and a Dessert to complete your meal. For a limited time, enjoy our Promotion of buy one get one free on any pizza. Hurry, this offer won't last long!",
+        "Categories": ["All", "Lunch", "Dinner", "Promotion", "Special"],
+        "Products": [
+        {"Id": "CC31",
+            "ProductName": "Margherita",
+            "ProductImg" : "images/img32.jpg",
+            "Description": "Our classic pizza, made with tomato sauce, mozzarella cheese, and basil. Served with a drink of your choice.",
+            "Categories": ["All", "Lunch", "Dinner", "Promotion"],
+            "Price": 8.50,
+            "Options": {
+            "Dessert": [ { "Dessert1": 2.00 , "Dessert2": 3.20 } ], 
+            "AddOn": [ { "Egg": 0.50 , "Nuggets": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+            },
+            "Diet": ["Vegetarian"]
+        },
+        {"Id": "CC32",
+            "ProductName": "Pepperoni",
+            "ProductImg" : "images/img32.jpg",
+            "Description": "A spicy pizza, made with tomato sauce, mozzarella cheese, and pepperoni. Served with a drink of your choice.",
+            "Categories": ["All", "Lunch", "Dinner"],
+            "Price": 8.22,
+            "Options": {
+            "Drink": [ { "Coke13": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ] 
+            }, 
+            "Diet": ["HighProtein"] 
+        },
+        {"Id": "CC33", 
+            "ProductName": "Hawaiian",
+            "ProductImg" : "images/img33.jpg",
+            "Description": "Our classic pizza, made with tomato sauce, mozzarella cheese, and basil. Served with a drink of your choice.",
+            "Categories": ["All", "Lunch", "Dinner", "Promotion"],
+            "Price": 5.55,
+            "Options": {
+            "Dessert": [ { "Dessert1": 2.00 , "Dessert2": 3.20 } ], 
+            "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+            },
+            "Diet": ["HighProtein"]
+        },
+        {
+            "Id": "CC34",
+            "ProductName": "Salad",
+            "ProductImg" : "images/img34.jpg",
+            "Description": "A fresh and healthy salad, made with lettuce, tomato, cucumber, carrot, cheese, and your choice of dressing. Served with a drink of your choice.",
+            "Categories": ["All", "Breakfast", "Lunch", "Dinner", "Special"],
+            "Price": 5.60,
+            "Options": {
+            "Drink": [ { "Coke14": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+            "Dressing": [ { "Dressing1": 0.00 , "Dressing2": 0.50 , "Dressing3": 0.50 , "Dressing4": 0.50 } ],
+            "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+            },
+            "Diet": ["Vegetarian", "LowCarbo/Sugar"]
+        },
+        {"Id": "CC35",
+            "ProductName": "Sandwich",
+            "ProductImg" : "images/img35.jpg",
+            "Description": "A tasty sandwich, made with your choice of Bread, meat, cheese, and Vegetables. Served with fries and a drink of your choice.",
+            "Categories": ["All", "Breakfast", "Lunch", "Dinner"],
+            "Price": 5.65,
+            "Options": {
+            "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+            "Bread": [ { "Bread1": 0.00 , "Bread2": 0.50 , "Bread3": 0.50 , "Bread4": 0.50 } ],
+            "Meat": [ { "Meat1": 0.00 , "Meat2": 1.00 , "Meat3": 1.00 , "Meat4": 1.00 } ],
+            "Cheese": [ { "Cheese1": 0.00 , "Cheese2": 0.50 , "Cheese3": 0.50 , "Cheese4": 0.50 } ],
+            "Vegetables": [ { "Vegetables1": 0.00 , "Vegetables2": 0.50 , "Vegetables3": 0.50 , "Vegetables4": 0.50 } ],
+            "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+            },
+            "Diet": ["LowCarbo/Sugar"]
+        },
+        {"Id": "CC36",
+            "ProductName": "Wrap",
+            "ProductImg" : "images/img36.jpg",
+            "Description": "A delicious wrap, made with your choice of tortilla, meat, cheese, and Vegetables. Served with fries and a drink of your choice.",
+            "Categories": ["All", "Breakfast", "Lunch", "Dinner"],
+            "Price": 5.70,
+            "Options": {
+            "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+            "Bread": [ { "Bread1": 0.00 , "Bread2": 0.50 , "Bread3": 0.50 , "Bread4": 0.50 } ],
+            "Meat": [ { "Meat1": 0.00 , "Meat2": 1.00 , "Meat3": 1.00 , "Meat4": 1.00 } ],
+            "Cheese": [ { "Cheese1": 0.00 , "Cheese2": 0.50 , "Cheese3": 0.50 , "Cheese4": 0.50 } ],
+            "Vegetables": [ { "Vegetables1": 0.00 , "Vegetables2": 0.50 , "Vegetables3": 0.50 , "Vegetables4": 0.50 } ],
+            "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+            },
+            "Diet": ["HighProtein"]
+        }
+        ],
+    "OperationHours": {
+      "weekday": "Monday to Sunday",
+      "startTime": "8:00 AM",
+      "endTime": "10:00 PM"
+    }
+  },
+  {"StoreId": 4,
+    "StoreName": "Cheap Pizza",
+    "StoreAddress": "789 Scotts Road, Far East Shopping Plaza, Singapore 123456",
+    "LogoImg": "images/logo4.jpg",
+    "StoreWebsite": "www.bingspizza.com",
+    "GeoLocation":"4,4",
+    "StorePhone": "+6597358539",
+    "PromotionMessage": "Welcome to Cheap Pizza, where we serve the best pizza in town! Try our classic Margherita, made with tomato sauce, mozzarella cheese, and basil. Or choose from our variety of other pizzas, pastas, salads, and sides. Don't forget to add a drink and a Dessert to complete your meal. For a limited time, enjoy our Promotion of buy one get one free on any pizza. Hurry, this offer won't last long!",
+    "Categories": ["All", "Lunch", "Dinner", "Promotion", "Special"],
+    "Products": [
+      {"Id": "DD41",
+        "ProductName": "Margherita Pizza",
+        "ProductImg" : "images/DD41.jpg",
+        "Description": "Our classic pizza, made with tomato sauce, mozzarella cheese, and basil. Served with a drink of your choice.",
+        "Categories": ["All", "Lunch", "Dinner", "Promotion"],
+        "Price": 5.80,
+        "Options": {
+          "Drink": [ { "Coke16": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+          "Size": [ { "Small": 8.00 , "Medium": 10.00 , "Large": 12.00 } ],
+          "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+        },
+        "Diet": ["HighProtein"]
+       },
+       {"Id": "DD42",
+        "ProductName": "Wrap",
+        "ProductImg" : "images/DD42-ChickenWrap.webp",
+        "Description": "A delicious wrap, made with your choice of tortilla, meat, cheese, and Vegetables. Served with fries and a drink of your choice.",
+        "Categories": ["All", "Breakfast", "Lunch", "Dinner"],
+        "Price": 5.85,
+        "Options": {
+         "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+         "Bread": [ { "Bread1": 0.00 , "Bread2": 0.50 , "Bread3": 0.50 , "Bread4": 0.50 } ],
+          "Meat": [ { "Meat1": 0.00 , "Meat2": 1.00 , "Meat3": 1.00 , "Meat4": 1.00 } ],
+          "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+        },
+        "Diet": ["HighProtein"]
+      },
+      {
+        "Id": "DD43",
+        "ProductName": "Classic Pancakes",
+        "ProductImg" : "images/DD43.jpg",
+        "Description": "Delicious fluffy pancakes served with maple syrup.",
+        "Price": 5.90,
+        "Options": {
+          "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+          "Bread": [ { "Bread1": 0.00 , "Bread2": 0.50 , "Bread3": 0.50 , "Bread4": 0.50 } ],
+          "Cheese": [ { "Cheese1": 0.00 , "Cheese2": 0.50 , "Cheese3": 0.50 , "Cheese4": 0.50 } ],
+          "Vegetables": [ { "Vegetables1": 0.00 , "Vegetables2": 0.50 , "Vegetables3": 0.50 , "Vegetables4": 0.50 } ],
+           "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+         },
+        "Categories": ["Breakfast"]
+      },
+      {
+        "Id": "DD44",
+        "ProductName": "Chicken Caesar Salad",
+        "ProductImg" : "images/DD44.jpg",
+        "Description": "Fresh romaine lettuce topped with grilled chicken and Caesar dressing.",
+        "Price": 8.88,
+        "Options": {
+          "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+          "Cheese": [ { "Cheese1": 0.00 , "Cheese2": 0.50 , "Cheese3": 0.50 , "Cheese4": 0.50 } ],
+          "Vegetables": [ { "Vegetables1": 0.00 , "Vegetables2": 0.50 , "Vegetables3": 0.50 , "Vegetables4": 0.50 } ],
+           "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+         },
+        "Categories": ["Lunch"]
+      },
+      {
+        "Id": "DD45",
+        "ProductName": "Special Dessert Platter",
+        "ProductImg" : "images/DD45.jpg",
+        "Description": "A delightful assortment of Desserts for sharing.",
+        "Price": 6.12,
+        "Options": {
+          "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+           "Meat": [ { "Meat1": 0.00 , "Meat2": 1.00 , "Meat3": 1.00 , "Meat4": 1.00 } ],
+          "Cheese": [ { "Cheese1": 0.00 , "Cheese2": 0.50 , "Cheese3": 0.50 , "Cheese4": 0.50 } ],
+          "Vegetables": [ { "Vegetables1": 0.00 , "Vegetables2": 0.50 , "Vegetables3": 0.50 , "Vegetables4": 0.50 } ],
+           "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+         },
+        "Categories": ["Special", "Dinner"]
+      },
+      {
+          "Id": "DD46",
+          "ProductName": "Avocado Toast",
+          "ProductImg" : "images/DD46.jpg",
+          "Description": "Sliced avocados on toasted whole-grain Bread.",
+          "Price": 6.15,
+          "Options": {
+            "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+            "Bread": [ { "Bread1": 0.00 , "Bread2": 0.50 , "Bread3": 0.50 , "Bread4": 0.50 } ],
+             "Meat": [ { "Meat1": 0.00 , "Meat2": 1.00 , "Meat3": 1.00 , "Meat4": 1.00 } ],
+             "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+           },
+          "Categories": ["Breakfast"]
+        },
+        {
+          "Id": "DD47",
+          "ProductName": "Chicken Pesto Panini",
+          "ProductImg" : "images/DD47.jpg",
+          "Description": "Grilled chicken, pesto sauce, and mozzarella on ciabatta.",
+          "Price": 6.22,
+          "Options": {
+            "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+             "Meat": [ { "Meat1": 0.00 , "Meat2": 1.00 , "Meat3": 1.00 , "Meat4": 1.00 } ],
+            "Cheese": [ { "Cheese1": 0.00 , "Cheese2": 0.50 , "Cheese3": 0.50 , "Cheese4": 0.50 } ],
+             "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+           },
+          "Categories": ["Lunch"]
+        },
+        {
+          "Id": "DD48",
+          "ProductName": "Spaghetti Bolognese",
+          "ProductImg" : "images/DD48.jpg",
+          "Description": "Classic Italian pasta with hearty meat sauce.",
+          "Price": 6.23,
+          "Options": {
+            "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+            "Bread": [ { "Bread1": 0.00 , "Bread2": 0.50 , "Bread3": 0.50 , "Bread4": 0.50 } ],
+             "Meat": [ { "Meat1": 0.00 , "Meat2": 1.00 , "Meat3": 1.00 , "Meat4": 1.00 } ],
+             "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+           },
+          "Categories": ["Dinner"]
+        },
+        {
+          "Id": "DD49",
+          "ProductName": "Promotional Smoothie",
+          "ProductImg" : "images/DD49.jpg",
+          "Description": "Refreshing mixed fruit smoothie for a limited time!",
+          "Price": 6.24,
+          "Options": {
+            "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+            "Bread": [ { "Bread1": 0.00 , "Bread2": 0.50 , "Bread3": 0.50 , "Bread4": 0.50 } ],
+             "Meat": [ { "Meat1": 0.00 , "Meat2": 1.00 , "Meat3": 1.00 , "Meat4": 1.00 } ],
+             "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+           },
+          "Categories": ["Promotion", "Lunch"]
+        },
+        {
+          "Id": "DD50",
+          "ProductName": "Chef's Special Steak",
+          "ProductImg" : "images/DD50.jpg",
+          "Description": "Prime ribeye steak with chef's secret seasoning.",
+          "Price": 6.26,
+          "Options": {
+            "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+            "Bread": [ { "Bread1": 0.00 , "Bread2": 0.50 , "Bread3": 0.50 , "Bread4": 0.50 } ],
+            "Vegetables": [ { "Vegetables1": 0.00 , "Vegetables2": 0.50 , "Vegetables3": 0.50 , "Vegetables4": 0.50 } ],
+             "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+           },
+          "Categories": ["Special", "Dinner"]
+        },
+        {
+          "Id": "DD51",
+          "ProductName": "Durian Cake",
+          "ProductImg" : "images/DD51.jpg",
+          "Description": "Indulgent chocolate cake with a gooey molten center.",
+          "Price": 6.28,
+          "Options": {
+            "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+            "Bread": [ { "Bread1": 0.00 , "Bread2": 0.50 , "Bread3": 0.50 , "Bread4": 0.50 } ],
+             "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+           },
+          "Categories": ["Special", "Dinner"]
+        },
+        {
+          "Id": "DD52",
+          "ProductName": "Chocolate Lava Cake",
+          "ProductImg" : "images/DD52.jpg",
+          "Description": "Indulgent chocolate cake with a gooey molten center.",
+          "Price": 6.34,
+          "Options": {
+            "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+            "Bread": [ { "Bread1": 0.00 , "Bread2": 0.50 , "Bread3": 0.50 , "Bread4": 0.50 } ],
+             "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+           },
+          "Categories": ["Special", "Dessert"]
+        },
+      {
+      "Id": "DD53",
+      "ProductName": "Greek Yogurt Parfait",
+      "ProductImg" : "images/DD53.jpg",
+      "Description": "Layers of Greek yogurt, granola, and fresh berries.",
+      "Price": 5.36,
+      "Options": {
+        "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+        "Bread": [ { "Bread1": 0.00 , "Bread2": 0.50 , "Bread3": 0.50 , "Bread4": 0.50 } ],
+         "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+       },
+      "Categories": ["Breakfast", "Vegetarian"]
+      },
+      {
+          "Id": "DD54",
+          "ProductName": "Caprese Salad",
+          "ProductImg" : "images/DD54.jpg",
+          "Description": "Tomatoes, fresh mozzarella, and basil with balsamic glaze.",
+          "Price": 4.37,
+          "Options": {
+            "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+            "Bread": [ { "Bread1": 0.00 , "Bread2": 0.50 , "Bread3": 0.50 , "Bread4": 0.50 } ],
+             "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+           },
+          "Categories": ["Lunch", "Vegetarian"]
+      },
+      {
+          "Id": "DD55",
+          "ProductName": "Shrimp Scampi Pasta",
+          "ProductImg" : "images/DD55.jpg",
+          "Description": "Linguine with succulent shrimp in a garlic and lemon sauce.",
+          "Price": 4.61,
+          "Options": {
+            "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+             "Meat": [ { "Meat1": 0.00 , "Meat2": 1.00 , "Meat3": 1.00 , "Meat4": 1.00 } ],
+            "Cheese": [ { "Cheese1": 0.00 , "Cheese2": 0.50 , "Cheese3": 0.50 , "Cheese4": 0.50 } ],
+             "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+           },
+          "Categories": ["Dinner", "Seafood"]
+      },
+      {
+          "Id": "DD56",
+          "ProductName": "Mango Tango Smoothie",
+          "ProductImg" : "images/DD56.jpg",
+          "Description": "Tropical blend of mango, pineapple, and coconut milk.",
+          "Price": 4.64,
+          "Options": {
+            "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+            "Bread": [ { "Bread1": 0.00 , "Bread2": 0.50 , "Bread3": 0.50 , "Bread4": 0.50 } ],
+            "Cheese": [ { "Cheese1": 0.00 , "Cheese2": 0.50 , "Cheese3": 0.50 , "Cheese4": 0.50 } ],
+            "Vegetables": [ { "Vegetables1": 0.00 , "Vegetables2": 0.50 , "Vegetables3": 0.50 , "Vegetables4": 0.50 }]
+           },
+          "Categories": ["Promotion", "Beverage"]
+      },
+      {
+          "Id": "DD57",
+          "ProductName": "Vegetarian Quinoa Bowl",
+          "ProductImg" : "images/DD57.jpg",
+          "Description": "Quinoa, roasted Vegetables, and tahini dressing.",
+          "Price": 4.67,
+          "Options": {
+            "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
+            "Bread": [ { "Bread1": 0.00 , "Bread2": 0.50 , "Bread3": 0.50 , "Bread4": 0.50 } ],
+             "Meat": [ { "Meat1": 0.00 , "Meat2": 1.00 , "Meat3": 1.00 , "Meat4": 1.00 } ],
+            "Cheese": [ { "Cheese1": 0.00 , "Cheese2": 0.50 , "Cheese3": 0.50 , "Cheese4": 0.50 } ],
+            "AddOn": [ { "AddOn1": 0.50 , "AddOn2": 2.00 , "AddOn3": 3.20 , "AddOn4": 2.10 , "AddOn5": 1.20 } ]
+           },
+          "Categories": ["Special", "Vegetarian"]
+      }
+      ],
+    "OperationHours": {
+      "weekday": "Monday to Sunday",
+      "startTime": "8:00 AM",
+      "endTime": "10:00 PM"
+     }
+  }
+]
+
+    const store=stores[3]; 
+    const products=stores[3].Products;
+    const storeFront = document.getElementById("store-front"); 
+    storeFront.innerHTML=`<img src="images/StoreBanner4.jpg" id="store-banner">
+      <div id="store-info">
+        <a href="${store.StoreWebsite}" id="store-web">${store.StoreWebsite}</a>
+        <a href="https://wa.me/${store.StorePhone}" id="store-wsphone">Contact us on WhatsApp</a>
+        <span id="store-address"> ${store.StoreAddress}</span>
+      </div>  
+      <img src="${store.LogoImg}" id="store-logo"> `
+      document.getElementById('cart-icon').addEventListener('click', function() {
+        var cart = document.getElementById('cart'); 
+        var cartClose=  document.getElementById('cart-close');   
+        if (cart.style.display === 'none') {
+          cart.style.display = 'block';
+          cartClose.style.display = 'block';
+          } else {
+            cart.style.display = 'none';
+            cartClose.style.display = 'none'
+          } 
+      }); 
+    // Function to add product to the cart
+    function addToCart(productId) {
+      var selectedOptions = document.querySelectorAll(`.option-checkbox[data-product-id="${productId}"]:checked`);
+      var product = products.find(p => p.Id === productId);
+      var totalPrice = product.Price;
+      // Calculate total price based on selected options
+      selectedOptions.forEach(option => {
+        totalPrice += parseFloat(option.getAttribute("data-price"));
+      });
+      // Create or update cart data in local storage
+      var cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart.push({ product, quantity: 1, totalPrice });
+      localStorage.setItem("cart", JSON.stringify(cart));
+      // Display updated cart details
+      displayCartDetails();
+      /*const button = document.querySelector(".add2Cart");
+      const messageBox = document.querySelector(".message-box");
+      const buttonWidth = button.offsetWidth;// Store original button dimensions
+      const buttonHeight = button.offsetHeight;
+      button.classList.add("moving");// Add the `moving` class for animation
+      // Set button width variable for animation
+      document.documentElement.style.setProperty("--button-width", `${buttonWidth}px`);
+      messageBox.style.display = "block";
+      setTimeout(() => { // Show message box after animation ends
+        button.classList.remove("moving");
+        messageBox.style.display = "none";
+      }, 2000);*/
+      
+    }
+    // Function to display cart details
+    function displayCartDetails() {
+      var cartDiv = document.getElementById("cart");
+      var cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      cartDiv.innerHTML = "<h2>Shopping Cart</h2>";
+
+      // Loop through cart items and display details
+      cart.forEach((item, index) => {
+        cartDiv.innerHTML += `
+          <div>
+            <p>${item.product.ProductName} - Quantity: ${item.quantity}</p>
+            <p>Total Price: $${item.totalPrice.toFixed(2)}</p>
+            <button onclick="updateQuantity(${index}, 'increase')">+</button>
+            <button onclick="updateQuantity(${index}, 'decrease')">-</button>
+            <button onclick="deleteItem(${index})">Delete</button>
+          </div>
+        `;
+      });
+    }
+  
+    // Function to update quantity in the cart
+    function updateQuantity(index, action) {
+      var cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      if (action === "increase") {
+        cart[index].quantity++;
+      } else if (action === "decrease" && cart[index].quantity > 1) {
+        cart[index].quantity--;
+      }
+
+      // Update total price based on quantity
+      cart[index].totalPrice = cart[index].product.Price * cart[index].quantity;
+      cart[index].quantity = cart[index].quantity;
+      // Update cart data in local storage
+      localStorage.setItem("cart", JSON.stringify(cart));
+
+      // Display updated cart details
+      displayCartDetails();
+    }
+
+      // Function to delete item from the cart
+    function deleteItem(index) {
+      var cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      // Remove the item at the specified index
+      cart.splice(index, 1);
+
+      // Update cart data in local storage
+      localStorage.setItem("cart", JSON.stringify(cart));
+
+      // Display updated cart details
+      displayCartDetails();
+    }
+    displayCartDetails();
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const categoryNav = document.getElementById("category-nav");
+      const productContainer = document.getElementById("product-container");
+
+      // Extract unique categories from product data
+      const categories = Array.from(
+          new Set(products.flatMap(product => product.Categories))
+      );
+      categories.shift();
+      categories.unshift("All");
+      // Create category navigation tabs
+      categories.forEach(category => {
+          const tab = document.createElement("a");
+          tab.href = "#";
+          tab.textContent = category;
+          tab.addEventListener("click", () => filterProducts(category));
+          categoryNav.appendChild(tab);
+      });
+
+      // Display all products initially
+      displayProducts(products);
+
+      // Function to filter and display products based on selected category
+      function filterProducts(category) {
+        if (category=="All"){
+                const filteredProducts = products;
+                displayProducts(filteredProducts);
+        } else {
+            const filteredProducts = products.filter(product =>
+                product.Categories.includes(category)
+            );
+            displayProducts(filteredProducts);
+        }
+      }
+
+      // Function to display products
+      function displayProducts(productsArray) {
+        productContainer.innerHTML = "";
+        // Loop through products and display details
+        productsArray.forEach(product => {
+            const card = document.createElement("div");
+            card.classList.add("product-card");
+            const productId = product.Id;
+            
+            card.innerHTML = `
+                <h3 style="display:inline-block;">${productId}</h3>
+                <h3 style="display:inline-block;">${product.ProductName}</h3>
+                <img src ="${product.ProductImg}" alt="${product.ProductName}" class="product-img">
+                <p>${product.Description}</p>
+                <p>Price: $${product.Price.toFixed(2)}</p>
+                <div id="options-${productId}" class="options-container">`
+                for (const optionType in product.Options) {
+                card.innerHTML += `<h4>${optionType}:</h4>`;
+                product.Options[optionType].forEach(item => {
+                    for (const name in item) {
+                    //console.log("  " + name + ": " + item[name]);
+                    var optionName = name;
+                    var optionPrice = item[name];
+                    card.innerHTML += `
+                    <label>
+                    <input type="radio" class="option-radio" name="${optionName}" data-product-id="${product.Id}" data-type="${optionType}" data-price="${optionPrice}">
+                    ${optionName} - $${optionPrice.toFixed(2)}
+                    </label>
+                    </div>`;
+                    }
+                })
+                }//close for (const optionType in product.Options) 
+            card.innerHTML += `<button class="add2Cart" onclick="addToCart('${productId}')">Add to Cart</button>`;
+            productContainer.appendChild(card);
+        });
+        const add2CartButtons = document.querySelectorAll('.add2Cart');
+      
+        add2CartButtons.forEach(button => {
+          button.addEventListener('click', event => {
+          
+            // Execute the existing onclick function first
+            /*const existingOnClick = button.getAttribute('onclick');
+            if (existingOnClick) {
+              new Function(existingOnClick)();
+            }*/
+            // Add the "clicked" class for animation
+            button.classList.add('clicked');
+            const messageBox = document.querySelector(".message-box");
+            messageBox.style.display = "flex";
+            console.log(messageBox);
+            // Remove the "clicked" class after animation ends (optional)
+            setTimeout(() => {
+              button.classList.remove('clicked');
+            }, 1000); // Adjust 1000ms to match your animation duration
+            setTimeout(() => {
+              messageBox.style.display = "none";
+            }, 2000); // Adjust 1000ms to match your animation duration
+          });
+        }); 
+      }//closing for displayProducts
+                 
+    });//closing document.addEventListener
+    </script>
+</body>
+
+</html>
