@@ -89,7 +89,6 @@
           width: 3rem; 
           height: 3rem;
           z-index: 1;
-          
       }
   
       #cart-close {
@@ -105,10 +104,18 @@
         border-radius: 50%;
         padding: 5px 20px;
       }
+      #cart-container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      /* For first to maintain*/
+      #cart-title {
+        margin-right: 30px;
+        margin-bottom: 10px; /* Adjust this value for vertical gap */
+      }
       #cart-icon:hover {
         background-color: #294089;
       }
-  
       #cart-count {
         display: inline-block;
         background-color: red;
@@ -117,7 +124,10 @@
         padding: 2px 5px;
         border-radius: 50%;
       }
-  
+      #cart-grand-total {
+        color: red;
+        margin-right: 0;
+      }
       #cart-total {
         display: block;
         background-color: red;
@@ -1002,9 +1012,10 @@
     function displayCartDetails() {
       var cartDiv = document.getElementById("cart");
       var cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-      cartDiv.innerHTML = "<h2>Shopping Cart</h2>";
-
+      var grandTotal = 0;
+      cartDiv.innerHTML = "<h2>Shopping Cart</h2>"
+      cartDiv.innerHTML += `<h3 id="cart-grand-total">Grand Total:  $</h3>
+          `
       // Loop through cart items and display details
       cart.forEach((item, index) => {
         cartDiv.innerHTML += `
@@ -1021,7 +1032,10 @@
             <button onclick="deleteItem(${index})">Delete</button>
           </div>
         `;
+        grandTotal += item.totalPrice;
       });
+      let grandElem=document.getElementById("cart-grand-total");
+      grandElem.innerHTML += grandTotal.toFixed(2);
     }
   
     // Function to display selected options in the cart
