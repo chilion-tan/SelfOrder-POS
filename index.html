@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resturant</title>
+    <title>Restaurant</title>
 
     <style>
       @keyframes showMessage {
@@ -183,7 +183,7 @@
       }
       .message-box {
         /*display: flex;*/
-        font-size: 24px;
+        font-size: 20px;
         justify-content: center;
         align-items: center;
         display: none;
@@ -192,7 +192,7 @@
         left: 50%;
         transform: translate(-50%, -50%);
         padding: 10px;
-        width: 10rem;
+        width: 14rem;
         height: 4rem;
         background-color: #2222f2;
         border: 1px solid #ccc;
@@ -229,6 +229,7 @@
         display: flex;
         flex-wrap: wrap;
         flex-direction: row;
+        background-color: #2222f2;
         /*height: 100vh;  Adjust as needed */
       }
   
@@ -240,8 +241,6 @@
       }
   
       #store-info {
-        /*hdisplay: flex;
-        flex-direction: column;*/
         width: 30vw;
         /*height: 100vh;  Adjust the height as needed */
       }
@@ -285,8 +284,7 @@
         }
   
         #store-info {
-          /*hdisplay: flex;
-          flex-direction: column;*/
+          background-image: radial-gradient(circle farthest-corner at center, blue, white);
           width: 70vw;
           /*height: 100vh;  Adjust the height as needed */
         }
@@ -345,7 +343,7 @@
             "ProductImg" : "images/img1.jpg",
             "Description": "Our signature burger, made with 100% beef patty, cheese, lettuce, tomato, onion, and our Special sauce. Served with fries and a drink of your choice.",
             "Categories": ["All", "Lunch", "Dinner", "Promotion"],
-            "Price": 6.88,
+            "Price": 6.00,
             "Options": {
             "Dessert": [{ "Dessert1": 2.00 ,  "Dessert2": 3.20 } ], 
             "AddOn": [{ "AddOn1": 0.50 ,  "AddOn2": 2.00 ,  "AddOn3": 3.20 , "AddOn4": 2.10 ,  "AddOn5": 1.20 }],
@@ -655,7 +653,7 @@
       "endTime": "10:00 PM"
     }
   },
-  {"StoreId": 4,
+  {"StoreId": "AB1234",
     "StoreName": "Cheap Pizza",
     "StoreAddress": "789 Scotts Road, Far East Shopping Plaza, Singapore 123456",
     "LogoImg": "images/logo4.jpg",
@@ -909,9 +907,31 @@
      }
   }
 ]
-
-    const store=stores[3]; 
-    const products=stores[3].Products;
+    let store= null;
+    const urlParams = new URLSearchParams(window.location.search);
+    try {
+      //const urlParams = new URLSearchParams(window.location.search);
+      const storeIdPara = urlParams.get('StoreID');
+      console.log(storeIdPara);
+      //const productIds = urlParams.get('ProductID').split(',');//in case of ProductID=A12,B23,C34
+      // Check if StoreID parameters is present
+      if (!storeIdPara) {
+        throw new Error('Missing StoreID in URL');
+      }
+      // Find the store object
+      store = stores.find(store => store.StoreId === storeIdPara);
+      
+      if (!store) {
+        throw new Error('Store with ID ' + storeId + ' not found');
+      }
+    } catch (error) {
+      // Handle error gracefully
+      //alert('Error: ' + error.message);
+      store = stores[0];
+    }
+    
+    //const store=stores[3]; 
+    const products=store.Products;
     const storeFront = document.getElementById("store-front"); 
     storeFront.innerHTML=`<img src="images/StoreBanner4.jpg" id="store-banner">
       <div id="store-info">
@@ -920,32 +940,50 @@
         <span id="store-address"> ${store.StoreAddress}</span>
       </div>  
       <img src="${store.LogoImg}" id="store-logo"> `
-      document.getElementById('cart-icon').addEventListener('click', function() {
-        var cart = document.getElementById('cart'); 
-        var cartClose=  document.getElementById('cart-close');   
-        if (cart.style.display === 'none') {
-          cart.style.display = 'block';
-          cartClose.style.display = 'block';
-          } else {
-            cart.style.display = 'none';
-            cartClose.style.display = 'none'
-          } 
-      }); 
+    //cart close event
+    document.getElementById('cart-icon').addEventListener('click', function() {
+      var cart = document.getElementById('cart'); 
+      var cartClose=  document.getElementById('cart-close');   
+      if (cart.style.display === 'none') {
+        cart.style.display = 'block';
+        cartClose.style.display = 'block';
+        window.scrollTo(0, 0);
+        } else {
+          cart.style.display = 'none';
+          cartClose.style.display = 'none'
+          displayCartDetails();
+          window.scrollTo(0, 0);
+        } 
+    });
+
+    var cart = JSON.parse(localStorage.getItem("cart")) || [];
+    //localStorage.removeItem('cart');
     // Function to add product to the cart
     function addToCart(productId) {
-      var selectedOptions = document.querySelectorAll(`.option-checkbox[data-product-id="${productId}"]:checked`);
+      var selectedOptions = document.querySelectorAll(`.option-radio:checked`);
       var product = products.find(p => p.Id === productId);
       var totalPrice = product.Price;
-      // Calculate total price based on selected options
+      // Create an array to store selected options
+      var selectedOptionsArray = [];
+      // Iterate through selected radio buttons and add their details
       selectedOptions.forEach(option => {
+        selectedOptionsArray.push({
+          type: option.getAttribute("data-type"),
+          name: option.getAttribute("data-name"),
+          price: parseFloat(option.getAttribute("data-price"))
+        });
+        // Add the price to the total
         totalPrice += parseFloat(option.getAttribute("data-price"));
       });
+
       // Create or update cart data in local storage
       var cart = JSON.parse(localStorage.getItem("cart")) || [];
-      cart.push({ product, quantity: 1, totalPrice });
+      cart.push({ product, quantity: 1, totalPrice, selectedOptions: selectedOptionsArray });
+      console.log(cart);
       localStorage.setItem("cart", JSON.stringify(cart));
       // Display updated cart details
       displayCartDetails();
+      //window.scrollTo(0, 0);
       /*const button = document.querySelector(".add2Cart");
       const messageBox = document.querySelector(".message-box");
       const buttonWidth = button.offsetWidth;// Store original button dimensions
@@ -973,6 +1011,11 @@
           <div>
             <p>${item.product.ProductName} - Quantity: ${item.quantity}</p>
             <p>Total Price: $${item.totalPrice.toFixed(2)}</p>
+            <p>Product Price: $${item.product.Price.toFixed(2)}</p>
+            <p>Selected Options:</p>
+            <ul>
+              ${displaySelectedOptions(item.selectedOptions)}
+            </ul>
             <button onclick="updateQuantity(${index}, 'increase')">+</button>
             <button onclick="updateQuantity(${index}, 'decrease')">-</button>
             <button onclick="deleteItem(${index})">Delete</button>
@@ -981,6 +1024,21 @@
       });
     }
   
+    // Function to display selected options in the cart
+    function displaySelectedOptions(selectedOptions) {
+      var selectedOptionsHTML = "";
+
+      // Check if selectedOptions is an array and has items
+      if (selectedOptions && selectedOptions.length) {
+        selectedOptions.forEach(option => {
+          selectedOptionsHTML += `<li>${option.type} - ${option.name} ($${option.price.toFixed(2)})</li>`;
+        });
+      } else {
+        selectedOptionsHTML = "<li>No selected options</li>";
+      }
+
+      return selectedOptionsHTML;
+    }
     // Function to update quantity in the cart
     function updateQuantity(index, action) {
       var cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -990,10 +1048,12 @@
       } else if (action === "decrease" && cart[index].quantity > 1) {
         cart[index].quantity--;
       }
+      // Update total price based on quantity and selected options
+      var product = cart[index].product;
+      var selectedOptions = cart[index].selectedOptions || [];
+      var optionsPrice = selectedOptions.reduce((total, option) => total + parseFloat(option.price), 0);
+      cart[index].totalPrice = (product.Price + optionsPrice) * cart[index].quantity;
 
-      // Update total price based on quantity
-      cart[index].totalPrice = cart[index].product.Price * cart[index].quantity;
-      cart[index].quantity = cart[index].quantity;
       // Update cart data in local storage
       localStorage.setItem("cart", JSON.stringify(cart));
 
@@ -1004,17 +1064,14 @@
       // Function to delete item from the cart
     function deleteItem(index) {
       var cart = JSON.parse(localStorage.getItem("cart")) || [];
-
       // Remove the item at the specified index
       cart.splice(index, 1);
-
       // Update cart data in local storage
       localStorage.setItem("cart", JSON.stringify(cart));
-
       // Display updated cart details
       displayCartDetails();
     }
-    displayCartDetails();
+    //displayCartDetails();
 
     document.addEventListener("DOMContentLoaded", function () {
       const categoryNav = document.getElementById("category-nav");
@@ -1070,17 +1127,17 @@
                 for (const optionType in product.Options) {
                 card.innerHTML += `<h4>${optionType}:</h4>`;
                 product.Options[optionType].forEach(item => {
-                    for (const name in item) {
-                    //console.log("  " + name + ": " + item[name]);
-                    var optionName = name;
-                    var optionPrice = item[name];
-                    card.innerHTML += `
-                    <label>
-                    <input type="radio" class="option-radio" name="${optionName}" data-product-id="${product.Id}" data-type="${optionType}" data-price="${optionPrice}">
-                    ${optionName} - $${optionPrice.toFixed(2)}
-                    </label>
-                    </div>`;
-                    }
+                  for (const name in item) {
+                  //console.log("  " + name + ": " + item[name]);
+                  var optionName = name;
+                  var optionPrice = item[name];
+                  card.innerHTML += `
+                  <label>
+                  <input type="radio" class="option-radio" name="${optionType}" data-product-id="${product.Id}" data-type="${optionType}" data-name="${optionName}" data-price="${optionPrice}">
+                  ${optionName} - $${optionPrice.toFixed(2)}
+                  </label>
+                  </div>`;
+                  }
                 })
                 }//close for (const optionType in product.Options) 
             card.innerHTML += `<button class="add2Cart" onclick="addToCart('${productId}')">Add to Cart</button>`;
@@ -1107,12 +1164,44 @@
             }, 1000); // Adjust 1000ms to match your animation duration
             setTimeout(() => {
               messageBox.style.display = "none";
-            }, 2000); // Adjust 1000ms to match your animation duration
+            }, 3200); // Adjust 1000ms to match your animation duration
           });
         }); 
       }//closing for displayProducts
-                 
+      //Finding the Product Card Element:
+      try{
+        const productIds = urlParams.get('ProductID').split(',');
+        // Check if both parameters are present
+        if (!productIds.length) {
+          throw new Error('Missing productID in URL');
+        }
+        const uniqueProductId = productIds[0];
+        // Find the product card element
+        function findProductCard(productId) {
+          const productCards = document.querySelectorAll('.product-card');
+          for (const card of productCards) {
+            const h3ProductID = card.querySelector('h3').textContent.trim();
+            if (h3ProductID === productId) {
+              return card;
+            }
+          }
+          return null;
+        }
+        const productCard = findProductCard(uniqueProductId);
+        if (!productCard) {
+          throw new Error('Product with ID ' + uniqueProductId + ' not found');
+        }
+
+        // Scrolling to the product card
+        productCard.scrollIntoView({ behavior: 'smooth' }); 
+      } catch (error) {
+        // Handle error gracefully
+        //alert('Error: ' + error.message);
+        // You can also do other things like logging the error to a server or redirecting to a different page.
+      }           
     });//closing document.addEventListener
+
+    
     </script>
 </body>
 
