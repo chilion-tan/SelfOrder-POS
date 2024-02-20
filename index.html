@@ -40,6 +40,7 @@
         box-sizing: border-box;
         background-color: #111;
         position: relative;
+        color: #fff;
       }
       /*      @keyframes enlargeAndMove {
       0% {transform: scale(1) translate(0, 0);}
@@ -966,7 +967,6 @@
         } 
     });
 
-    var cart = JSON.parse(localStorage.getItem("cart")) || [];
     //localStorage.removeItem('cart');
     // Function to add product to the cart
     function addToCart(productId) {
@@ -1129,8 +1129,7 @@
         productsArray.forEach(product => {
             const card = document.createElement("div");
             card.classList.add("product-card");
-            const productId = product.Id;
-            
+            const productId = product.Id;    
             card.innerHTML = `
                 <h3 style="display:inline-block;">${productId}</h3>
                 <h3 style="display:inline-block;">${product.ProductName}</h3>
