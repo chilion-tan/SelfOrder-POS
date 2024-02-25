@@ -28,18 +28,23 @@
           transform: translate(0, 0) scale(1);
         }
       }
-      
-      .add2Cart.clicked {
-        animation: moveShrink 1s ease-in-out forwards;
+      @keyframes marquee {
+          0% {
+              transform: translateX(0%);
+          }
+          100% {
+              transform: translateX(-100%);
+          }
       }
       
       body {
         font-family: 'Arial', sans-serif;
         margin: 0;
-        padding: 2px;
+        padding: 0px;
         box-sizing: border-box;
         background-color: #111;
         position: relative;
+        color: #fff;
       }
       /*      @keyframes enlargeAndMove {
       0% {transform: scale(1) translate(0, 0);}
@@ -53,8 +58,9 @@
   
       button {
         display: inline-block;
+        color: #fff;
         padding: 10px 20px;
-        font-size: 16px;
+        font-size: 18px;
         font-weight: bold;
         text-align: center;
         cursor: pointer;
@@ -82,8 +88,8 @@
           background-color: #3498db;
           background-position: center center;
           background-repeat: no-repeat;
-          color: #fff;
-          padding: 10px;
+          color: yellow;
+          padding: 8px;
           border-radius: 50%;
           cursor: pointer;
           width: 3rem; 
@@ -116,26 +122,32 @@
       #cart-icon:hover {
         background-color: #294089;
       }
+      /*Value Inside cart icon*/
       #cart-count {
         display: inline-block;
-        background-color: red;
+        background-color: #810;
         color: #ccc;
         font-size: 12px;
         padding: 2px 5px;
         border-radius: 50%;
       }
+      /*within page top most*/
       #cart-grand-total {
         color: red;
         margin-right: 0;
       }
+      /*Value Inside cart icon*/
       #cart-total {
+        content: "$";
         display: block;
-        background-color: red;
+        background-color: #800;
         opacity: 0.5;
         font-size: 14px;
         margin-top: 5px;
       }
-      
+      #cart-total::before {
+        content: "$";
+      }
       #checkout-page {
         position: fixed;
         top: 0;
@@ -149,24 +161,9 @@
         justify-content: center;
         z-index: 999;
       }
-  
       #checkout-page.hidden {
         display: none;
       }
-  
-      h3 {
-        margin: 0;
-        padding: 0;
-      }
-  
-      label {
-      width: 100%;
-      display: block; /* Display as block */
-      border: 1px solid black;
-      margin: 5px;
-      padding: 5px; /* Add padding for better appearance */
-      }
-  
       #category-nav {
         position: sticky;
         width: 90%;
@@ -177,7 +174,6 @@
         background-color: #315;
         display: flex;
       }
-  
       #category-nav a {
         display: inline-block;
         padding: 14px 16px;
@@ -186,10 +182,20 @@
         text-decoration: unset;
         font-size: 16 px;
       }
-  
       #category-nav a:hover {
         background-color: #d00;
         color: black;
+      }
+      h3 {
+        margin: 0;
+        padding: 0;
+      }
+      label {
+      width: 100%;
+      display: block; /* Display as block */
+      border: 1px solid black;
+      margin: 5px;
+      padding: 5px; /* Add padding for better appearance */
       }
       .message-box {
         /*display: flex;*/
@@ -220,7 +226,6 @@
           justify-content: center;
           padding: 10px;
       }
-  
       .product-img {
           width: 10rem;
           height: 8rem;
@@ -233,28 +238,39 @@
           width: 300px;
           box-shadow: 0 0 10px rgb(255, 0, 149); /* Blue shadow */
       }
-      
-      #store-front {
-        justify-content: center;
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-        background-color: #2222f2;
-        /*height: 100vh;  Adjust as needed */
+      #store-address {
+        color: yellow;
+        margin: 8px 4px 2px 4px
       }
-  
       #store-banner {
         /*overflow-x: auto;*/
         width: 40%;
         height: 8rem;
         border: 1px solid rgba(245, 241, 7, 0.815);
       }
-  
+      #store-front {
+        justify-content: center;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        background-color: #222252;
+        /*height: 100vh;  Adjust as needed */
+      }
       #store-info {
         width: 30vw;
+        color: yellow;
+        display: flex;
+        flex-direction: column; /* This makes the child elements stack vertically */
+        gap: 5px; 
         /*height: 100vh;  Adjust the height as needed */
       }
-  
+      #store-info > * {  /* Asterisk is wild card for all child*/
+        width: 30vw;
+        color: yellow;
+        margin: 4px 4px 4px 4px;
+        border: 1px solid rgba(245, 241, 235, 0.815);
+        /*height: 100vh;  Adjust the height as needed */
+      }
       #store-logo {
         /*overflow-x: auto;
         align-self: flex-end;*/
@@ -264,16 +280,30 @@
         height: 6rem;
         border: 1px solid rgba(245, 241, 7, 0.815); /* Corrected the border property */
       }
-  
-      #store-address {
-        margin: 8px 4px 2px 4px
+      #store-msg-sticky {
+        color: #fff;
+        position: sticky;
+        width: 100%;
+        top: 3rem;
+        height: 1.5rem;
+        overflow: hidden;
+        white-space: nowrap;
+        background-color: #315;
       }
-  
+      #store-msg {
+        text-indent: 150px;
+        color: #fff;
+        display: inline-block;
+        margin: 1px 4px;
+        padding-left: 100px; /* Space between iterations */
+        animation: marquee 25s linear infinite; /* Adjust the duration as needed */
+      }
       #store-web {
-        margin: 8px 4px 2px 4px; /* 2px gap between elements */
+        color: gold;
+        /*margin: 8px 4px 2px 4px;  2px gap between elements */
       }
       #store-wsphone {
-        margin: 8px 2px 4px 2px; /* 2px gap between elements */
+        color: gold; /*2px gap between elements */
         display: block;
       }
   
@@ -294,8 +324,8 @@
         }
   
         #store-info {
-          background-image: radial-gradient(circle farthest-corner at center, blue, white);
           width: 70vw;
+          gap: 3px; 
           /*height: 100vh;  Adjust the height as needed */
         }
   
@@ -328,24 +358,30 @@
     <div id="store-front">
       
     </div>
-      <nav id="category-nav">
-          <!-- Navigation tabs dynamically created from category values -->
-      </nav>
-  
-      <div id="product-container">
-          <!-- Product cards dynamically created here -->
-      </div>
-      <div class="message-box">Tap cart icon and <br> scroll to top to view order</div>
+    <nav id="category-nav">
+        <!-- Navigation tabs dynamically created from category values -->
+    </nav>
+    <div id="store-msg-sticky">
+      <p id="store-msg">
+      <span>This is text that will be placed</span>
+      </p>
+    </div>
+    <div id="product-container">
+        <!-- Product cards dynamically created here -->
+    </div>
+    <div class="message-box">Tap the cart icon <br>to view order
+    </div>
     <script>
     const stores = [
         { "StoreId": 1,
-        "StoreName": "Mom's Burgers",
+        "StoreUnique": "Oc156HomeMadeDishes",
+        "StoreName": "Home Made Dishes",
         "StoreAddress": "156 Orchard Road, Singapore",
         "LogoImg": "images/logo1.jpg",
         "StoreWebsite": "www.bingsburgers.com",
         "GeoLocation":"0,0",
         "StorePhone": "+65 2345 6789",
-        "PromotionMessage": "Welcome to Bing's Burgers, where we serve the best burgers in town! Try our signature Bing Burger, made with 100% beef patty, cheese, lettuce, tomato, onion, and our Special sauce. Or choose from our variety of other burgers, salads, sandwiches, and sides. Don't forget to add a drink and a Dessert to complete your meal. For a limited time, enjoy our Promotion of 10% off any burger combo. Hurry, this offer won't last long!",
+        "PromotionMessage": "Welcome to Home Made Dishes, where we serve the best food we would eat! Try our signature Bing Burger, made with 100% beef patty, cheese, lettuce, tomato, onion, and our Special sauce. Or choose from our variety of other burgers, salads, sandwiches, and sides. Don't forget to add a drink and a Dessert to complete your meal. For a limited time, enjoy our Promotion of 10% off any burger combo. Hurry, this offer won't last long!",
         "Categories": ["All", "Lunch", "Dinner", "Promotion", "Special"],
         "Products": [
         { "Id": "AA01",
@@ -492,6 +528,7 @@
         }
     },
     {"StoreId": 2,
+        "StoreUnique": "Br789BingBurger",
         "StoreName": "Bing's Pizza",
         "StoreAddress": "789 Beach Road, Singapore",
         "LogoImg": "images/logo2.jpg",
@@ -566,8 +603,9 @@
         }
     },
     { "StoreId": 3,
+        "StoreUnique": "Bf233BigFatBurger",
         "StoreName": "Big Fat Pizza",
-        "StoreAddress": "789 Bugis Street, Singapore",
+        "StoreAddress": "233 Bugis Street, Singapore",
         "LogoImg": "images/logo3.jpg",
         "StoreWebsite": "www.bingspizza.com",
         "GeoLocation":"0,4",
@@ -664,6 +702,7 @@
     }
   },
   {"StoreId": "AB1234",
+    "StoreUnique": "Sr789CheapPizza",
     "StoreName": "Cheap Pizza",
     "StoreAddress": "789 Scotts Road, Far East Shopping Plaza, Singapore 123456",
     "LogoImg": "images/logo4.jpg",
@@ -918,11 +957,12 @@
   }
 ]
     let store= null;
+    //navigate based on url query
     const urlParams = new URLSearchParams(window.location.search);
     try {
       //const urlParams = new URLSearchParams(window.location.search);
       const storeIdPara = urlParams.get('StoreID');
-      console.log(storeIdPara);
+      //console.log(storeIdPara);
       //const productIds = urlParams.get('ProductID').split(',');//in case of ProductID=A12,B23,C34
       // Check if StoreID parameters is present
       if (!storeIdPara) {
@@ -930,7 +970,6 @@
       }
       // Find the store object
       store = stores.find(store => store.StoreId === storeIdPara);
-      
       if (!store) {
         throw new Error('Store with ID ' + storeId + ' not found');
       }
@@ -939,17 +978,22 @@
       //alert('Error: ' + error.message);
       store = stores[0];
     }
-    
     //const store=stores[3]; 
     const products=store.Products;
     const storeFront = document.getElementById("store-front"); 
+    const cartTotalEle = document.getElementById("cart-total"); 
+    const cartCountEle = document.getElementById("cart-count");
+    const storeMsgEle = document.getElementById("store-msg"); 
     storeFront.innerHTML=`<img src="images/StoreBanner4.jpg" id="store-banner">
       <div id="store-info">
         <a href="${store.StoreWebsite}" id="store-web">${store.StoreWebsite}</a>
         <a href="https://wa.me/${store.StorePhone}" id="store-wsphone">Contact us on WhatsApp</a>
         <span id="store-address"> ${store.StoreAddress}</span>
+        <span id="store-address"> ${store.StoreUnique}</span>
       </div>  
       <img src="${store.LogoImg}" id="store-logo"> `
+    //get store messages
+    storeMsgEle.innerHTML = store.PromotionMessage;
     //cart close event
     document.getElementById('cart-icon').addEventListener('click', function() {
       var cart = document.getElementById('cart'); 
@@ -965,8 +1009,11 @@
           window.scrollTo(0, 0);
         } 
     });
-
     var cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (cart.length>0.1){
+      displayCartDetails();
+    }
+    //console.log(cart);
     //localStorage.removeItem('cart');
     // Function to add product to the cart
     function addToCart(productId) {
@@ -1006,13 +1053,14 @@
         button.classList.remove("moving");
         messageBox.style.display = "none";
       }, 2000);*/
-      
     }
     // Function to display cart details
     function displayCartDetails() {
       var cartDiv = document.getElementById("cart");
       var cart = JSON.parse(localStorage.getItem("cart")) || [];
+      //var cartProducts = cart[2];
       var grandTotal = 0;
+      var cartCount = 0;
       cartDiv.innerHTML = "<h2>Shopping Cart</h2>"
       cartDiv.innerHTML += `<h3 id="cart-grand-total">Grand Total:  $</h3>
           `
@@ -1028,14 +1076,18 @@
               ${displaySelectedOptions(item.selectedOptions)}
             </ul>
             <button onclick="updateQuantity(${index}, 'increase')">+</button>
-            <button onclick="updateQuantity(${index}, 'decrease')">-</button>
+            <button onclick="updateQuantity(${index}, 'decrease')">&ndash;</button>
             <button onclick="deleteItem(${index})">Delete</button>
           </div>
         `;
         grandTotal += item.totalPrice;
+        cartCount += item.quantity;
+        console.log(item.quantity);
       });
       let grandElem=document.getElementById("cart-grand-total");
       grandElem.innerHTML += grandTotal.toFixed(2);
+      cartTotalEle.innerHTML = grandTotal.toFixed(2);
+      cartCountEle.innerHTML = cartCount; 
     }
   
     // Function to display selected options in the cart
@@ -1086,11 +1138,10 @@
       displayCartDetails();
     }
     //displayCartDetails();
-
+    //initialize product
     document.addEventListener("DOMContentLoaded", function () {
       const categoryNav = document.getElementById("category-nav");
       const productContainer = document.getElementById("product-container");
-
       // Extract unique categories from product data
       const categories = Array.from(
           new Set(products.flatMap(product => product.Categories))
@@ -1105,7 +1156,6 @@
           tab.addEventListener("click", () => filterProducts(category));
           categoryNav.appendChild(tab);
       });
-
       // Display all products initially
       displayProducts(products);
 
@@ -1130,7 +1180,7 @@
             const card = document.createElement("div");
             card.classList.add("product-card");
             const productId = product.Id;
-            
+            //populate product card
             card.innerHTML = `
                 <h3 style="display:inline-block;">${productId}</h3>
                 <h3 style="display:inline-block;">${product.ProductName}</h3>
@@ -1158,10 +1208,8 @@
             productContainer.appendChild(card);
         });
         const add2CartButtons = document.querySelectorAll('.add2Cart');
-      
         add2CartButtons.forEach(button => {
           button.addEventListener('click', event => {
-          
             // Execute the existing onclick function first
             /*const existingOnClick = button.getAttribute('onclick');
             if (existingOnClick) {
@@ -1213,9 +1261,7 @@
         //alert('Error: ' + error.message);
         // You can also do other things like logging the error to a server or redirecting to a different page.
       }           
-    });//closing document.addEventListener
-
-    
+    });//closing document.addEventListener 
     </script>
 </body>
 
