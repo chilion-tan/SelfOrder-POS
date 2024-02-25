@@ -378,7 +378,7 @@
         "StoreName": "Home Made Dishes",
         "StoreAddress": "156 Orchard Road, Singapore",
         "LogoImg": "images/logo1.jpg",
-        "StoreWebsite": "www.bingsburgers.com",
+        "StoreWebsite": "www.homemadedishes.com",
         "GeoLocation":"0,0",
         "StorePhone": "+65 2345 6789",
         "PromotionMessage": "Welcome to Home Made Dishes, where we serve the best food we would eat! Try our signature Bing Burger, made with 100% beef patty, cheese, lettuce, tomato, onion, and our Special sauce. Or choose from our variety of other burgers, salads, sandwiches, and sides. Don't forget to add a drink and a Dessert to complete your meal. For a limited time, enjoy our Promotion of 10% off any burger combo. Hurry, this offer won't last long!",
@@ -411,7 +411,7 @@
             "Diet": ["Vegetarian", "LowCarbo/Sugar"]
         },
         {"Id": "AA03",
-            "ProductName": "Chicken Burger",
+            "ProductName": "Fish Squid Combo",
             "ProductImg" : "images/img3.jpg",
             "Description": "A juicy chicken patty, cheese, lettuce, tomato, onion, and our Special sauce. Served with fries and a drink of your choice.",
             "Categories": ["All", "Lunch", "Dinner"],
@@ -424,7 +424,7 @@
             "Diet": ["HighProtein"]
         },
         {"Id": "AA04",
-            "ProductName": "Fish Burger",
+            "ProductName": "Pizza",
             "ProductImg" : "images/img4.jpg",
             "Description": "A crispy fish fillet, cheese, lettuce, tomato, onion, and our Special sauce. Served with fries and a drink of your choice.",
             "Categories": ["All", "Lunch", "Dinner"],
@@ -489,7 +489,7 @@
             "Diet": ["Vegetarian", "LowCarbo/Sugar"]
         },
         {"Id": "AA09",
-            "ProductName": "Sandwich",
+            "ProductName": "Burger Combo Meal",
             "ProductImg" : "images/img9.jpg",
             "Description": "A tasty sandwich, made with your choice of Bread, meat, cheese, and Vegetables. Served with fries and a drink of your choice.",
             "Categories": ["All", "Breakfast", "Lunch", "Dinner"],
@@ -957,12 +957,12 @@
   }
 ]
     let store= null;
-    //navigate based on url query
+    //navigate based on url query like index.html?StoreID=AB1234&ProductID=DD57
     const urlParams = new URLSearchParams(window.location.search);
     try {
       //const urlParams = new URLSearchParams(window.location.search);
       const storeIdPara = urlParams.get('StoreID');
-      //console.log(storeIdPara);
+      console.log(storeIdPara);
       //const productIds = urlParams.get('ProductID').split(',');//in case of ProductID=A12,B23,C34
       // Check if StoreID parameters is present
       if (!storeIdPara) {
