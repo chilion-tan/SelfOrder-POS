@@ -380,7 +380,7 @@
         "LogoImg": "images/logo1.jpg",
         "StoreWebsite": "www.homemadedishes.com",
         "GeoLocation":"0,0",
-        "StorePhone": "+65 2345 6789",
+        "StorePhone": "+6597358539",
         "PromotionMessage": "Welcome to Home Made Dishes, where we serve the best food we would eat! Try our signature Bing Burger, made with 100% beef patty, cheese, lettuce, tomato, onion, and our Special sauce. Or choose from our variety of other burgers, salads, sandwiches, and sides. Don't forget to add a drink and a Dessert to complete your meal. For a limited time, enjoy our Promotion of 10% off any burger combo. Hurry, this offer won't last long!",
         "Categories": ["All", "Lunch", "Dinner", "Promotion", "Special"],
         "Products": [
@@ -701,7 +701,7 @@
       "endTime": "10:00 PM"
     }
   },
-  {"StoreId": "AB1234",
+  {"StoreId": "ABC123",
     "StoreUnique": "Sr789CheapPizza",
     "StoreName": "Cheap Pizza",
     "StoreAddress": "789 Scotts Road, Far East Shopping Plaza, Singapore 123456",
@@ -1036,7 +1036,7 @@
       // Create or update cart data in local storage
       var cart = JSON.parse(localStorage.getItem("cart")) || [];
       cart.push({ product, quantity: 1, totalPrice, selectedOptions: selectedOptionsArray });
-      console.log(cart);
+      //console.log(cartText);
       localStorage.setItem("cart", JSON.stringify(cart));
       // Display updated cart details
       displayCartDetails();
@@ -1061,7 +1061,7 @@
       //var cartProducts = cart[2];
       var grandTotal = 0;
       var cartCount = 0;
-      cartDiv.innerHTML = "<h2>Shopping Cart</h2>"
+      cartDiv.innerHTML = "<h2>Shopping Cart</h2><button onclick='checkout()'>Check Out</button>"
       cartDiv.innerHTML += `<h3 id="cart-grand-total">Grand Total:  $</h3>
           `
       // Loop through cart items and display details
@@ -1088,6 +1088,39 @@
       grandElem.innerHTML += grandTotal.toFixed(2);
       cartTotalEle.innerHTML = grandTotal.toFixed(2);
       cartCountEle.innerHTML = cartCount; 
+    }
+    //function to checkout
+    function checkout() {
+      // Get the "cart" element
+      const cartElement = document.getElementById("cart");
+      // Function to extract text from an element and its children
+      function getTextContent(element) {
+        let text = "";
+        for (const child of element.childNodes) {
+          console.log(child);
+          console.log("child.nodeType= "+child.nodeType +"; Node.TEXT_NODE= "+Node.TEXT_NODE+" ;child.nodeName= "+child.nodeName);
+          if (child.nodeType === Node.TEXT_NODE) {
+            console.log(child.textContent)
+            text += child.textContent.trim();//+"%0A"; //replace(/\s+/g, " ").trim();
+          } else if (child.nodeName.toLowerCase() !== "button") {
+            text += getTextContent(child) + "\n";
+          }
+        }
+          return text;
+        }
+      // Extract text from the cart element
+      const cartText = getTextContent(cartElement);
+      // Create prompt message with line breaks added
+      const message = cartText.replace(/\s+/g, " ").trim(); // Remove unnecessary whitespace
+
+      // Prompt user to send message to WhatsApp
+      //const phoneNumber = prompt("Enter phone number (including country code): ");
+      //const encodedMessage = encodeURIComponent(message); // Encode for URL
+      //const whatsAppURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+      console.log(cartText);
+      var whatsappLink = document.getElementById("store-wsphone");
+      whatsappLink.href += "?text=" + encodeURIComponent(cartText);
+      window.open(whatsappLink.href, "_blank");
     }
   
     // Function to display selected options in the cart
