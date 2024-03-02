@@ -1067,7 +1067,7 @@
       // Loop through cart items and display details
       cart.forEach((item, index) => {
         cartDiv.innerHTML += `
-          <div>
+          <div class="ordered">
             <p>${item.product.ProductName} - Quantity: ${item.quantity}</p>
             <p>Total Price: $${item.totalPrice.toFixed(2)}</p>
             <p>Product Price: $${item.product.Price.toFixed(2)}</p>
@@ -1091,36 +1091,52 @@
     }
     //function to checkout
     function checkout() {
-      // Get the "cart" element
-      const cartElement = document.getElementById("cart");
-      // Function to extract text from an element and its children
-      function getTextContent(element) {
-        let text = "";
-        for (const child of element.childNodes) {
-          console.log(child);
-          console.log("child.nodeType= "+child.nodeType +"; Node.TEXT_NODE= "+Node.TEXT_NODE+" ;child.nodeName= "+child.nodeName);
-          if (child.nodeType === Node.TEXT_NODE) {
-            console.log(child.textContent)
-            text += child.textContent.trim();//+"%0A"; //replace(/\s+/g, " ").trim();
-          } else if (child.nodeName.toLowerCase() !== "button") {
-            text += getTextContent(child) + "\n";
+      console.log(parseInt(cartCountEle.textContent));
+      if (parseInt(cartCountEle.textContent)<0.1){
+        alert("No items in your cart");
+      } else {
+        let order="I am ordering -"+getOrderCode()+"\n";
+        // Get the "cart" element
+        const cartElement = document.getElementById("cart");
+        console.log(cartElement);
+        // Function to extract text from an element and its children
+        function getTextContent(element) {
+          let text = "";
+          for (const child of element.childNodes) {
+            //console.log(child);
+            //console.log("child.nodeType= "+child.nodeType +"; Node.TEXT_NODE= "+Node.TEXT_NODE+" ;child.nodeName= "+child.nodeName);
+            if (child.nodeType === Node.TEXT_NODE) {
+              //console.log(child.textContent)
+              text += child.textContent.trim();//+"%0A"; //replace(/\s+/g, " ").trim();
+            } else if (child.nodeName.toLowerCase() !== "button") {
+              text += getTextContent(child) + "\n";
+            }
           }
-        }
-          return text;
-        }
-      // Extract text from the cart element
-      const cartText = getTextContent(cartElement);
-      // Create prompt message with line breaks added
-      const message = cartText.replace(/\s+/g, " ").trim(); // Remove unnecessary whitespace
-
-      // Prompt user to send message to WhatsApp
-      //const phoneNumber = prompt("Enter phone number (including country code): ");
-      //const encodedMessage = encodeURIComponent(message); // Encode for URL
-      //const whatsAppURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-      console.log(cartText);
-      var whatsappLink = document.getElementById("store-wsphone");
-      whatsappLink.href += "?text=" + encodeURIComponent(cartText);
-      window.open(whatsappLink.href, "_blank");
+            return text;
+          }
+        // Get order code and combine with text from the cart element
+        const cartText = order+getTextContent(cartElement);
+        // Create prompt message with line breaks added
+        const message = cartText.replace(/\s+/g, " ").trim(); // Remove unnecessary whitespace
+        
+        // Prompt user to send message to WhatsApp
+        //const phoneNumber = prompt("Enter phone number (including country code): ");
+        //const encodedMessage = encodeURIComponent(message); // Encode for URL
+        //const whatsAppURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+        //console.log(cartText);
+        var whatsappLink = document.getElementById("store-wsphone");
+        whatsappLink.href += "?text=" + encodeURIComponent(cartText);
+        window.open(whatsappLink.href, "_blank");
+        localStorage.removeItem('cart');
+        const orderedElements = document.querySelectorAll('.ordered');
+        orderedElements.forEach((element) => {
+          element.remove();
+        });
+        cartCountEle.innerHTML="0";
+        cartTotalEle.innerHTML="0";
+        let grandElem=document.getElementById("cart-grand-total");
+        grandElem.innerHTML="$0";
+      }
     }
   
     // Function to display selected options in the cart
@@ -1295,6 +1311,16 @@
         // You can also do other things like logging the error to a server or redirecting to a different page.
       }           
     });//closing document.addEventListener 
+    function getOrderCode() {
+      var rdmString = "";
+      for( ; rdmString.length < 4; rdmString  += Math.random().toString(36).substr(2));
+      var d = new Date();
+      var mth=("0" + d.getDate()).slice(-2);
+      var date=("0" + (d.getMonth()+1)).slice(-2);
+      //var dateStr = String('-'+today.getDate()+today.toLocaleString('default', { month: 'short' }));
+      var dateStr = String('-'+mth+date+ d.getHours()+d.getMinutes());
+      return rdmString.substr(0, 4).toLocaleUpperCase()+dateStr 
+    }
     </script>
 </body>
 
