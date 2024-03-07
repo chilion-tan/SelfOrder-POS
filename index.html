@@ -1113,7 +1113,7 @@
       if (parseInt(cartCountEle.textContent)<0.1){
         alert("No items in your cart");
       } else {
-        let order=store.StoreUnique+"\n I am ordering -"+getOrderCode()+"\n";
+        let order="I am ordering -"+getOrderCode()+"\n from ";
         // Get the "cart" element
         const cartElement = document.getElementById("cart");
         console.log(cartElement);
