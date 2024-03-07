@@ -306,6 +306,21 @@
         color: gold; /*2px gap between elements */
         display: block;
       }
+      .toggleOption {
+        display: inline-block;
+        margin-bottom: 10px;
+        color: #bbf;
+        padding: 10px;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        cursor: pointer;
+        border: 2px solid #3498db; /* Border color */
+        background: #d00;
+        border-radius: 10px; /* Rounded corners */
+        transition: background-color 0.3s, color 0.3s; /* Smooth transition on hover */
+        animation: enlargeAndMove 4s ease-in-out; /* Apply animation */
+      }
     /*To do - style store front to vertical*/
       @media only screen and (max-width: 500px) {
         #store-front {
@@ -372,7 +387,7 @@
     </div>
     <script>
     const stores = [
-        { "StoreId": 1,
+        { "StoreId": "Store01",
         "StoreUnique": "Oc156HomeMadeDishes",
         "StoreName": "Home Made Dishes",
         "StoreAddress": "156 Orchard Road, Singapore",
@@ -707,7 +722,7 @@
     "LogoImg": "images/logo4.jpg",
     "StoreWebsite": "www.bingspizza.com",
     "GeoLocation":"4,4",
-    "StorePhone": "+6597358539",
+    "StorePhone": "+6592299338",
     "PromotionMessage": "Welcome to Cheap Pizza, where we serve the best pizza in town! Try our classic Margherita, made with tomato sauce, mozzarella cheese, and basil. Or choose from our variety of other pizzas, pastas, salads, and sides. Don't forget to add a drink and a Dessert to complete your meal. For a limited time, enjoy our Promotion of buy one get one free on any pizza. Hurry, this offer won't last long!",
     "Categories": ["All", "Lunch", "Dinner", "Promotion", "Special"],
     "Products": [
@@ -955,7 +970,7 @@
      }
   }
 ]   
-    //localStorage.removeItem('cart');
+    //localStorage.removeItem('storeidcurr+cart');
     let store= null;
     //navigate based on url query like index.html?StoreID=AB1234&ProductID=DD57
     const urlParams = new URLSearchParams(window.location.search);
@@ -978,7 +993,8 @@
       //alert('Error: ' + error.message);
       store = stores[0];
     }
-    //const store=stores[3]; 
+    const storeIDCurr=store.StoreId;//current store ID
+    console.log(storeIDCurr);
     const products=store.Products;
     const storeFront = document.getElementById("store-front"); 
     const cartTotalEle = document.getElementById("cart-total"); 
@@ -1009,7 +1025,7 @@
           window.scrollTo(0, 0);
         } 
     });
-    var cart = JSON.parse(localStorage.getItem("cart")) || [];
+    var cart = JSON.parse(localStorage.getItem(storeIDCurr+"Cart")) || [];
     if (cart.length>0.1){
       displayCartDetails();
     }
@@ -1034,10 +1050,11 @@
       });
 
       // Create or update cart data in local storage
-      var cart = JSON.parse(localStorage.getItem("cart")) || [];
+      var cart = JSON.parse(localStorage.getItem(storeIDCurr+"Cart")) || [];
       cart.push({ product, quantity: 1, totalPrice, selectedOptions: selectedOptionsArray });
       //console.log(cartText);
-      localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem(storeIDCurr+"Cart", JSON.stringify(cart));
+      toggleOption(productId);
       // Display updated cart details
       displayCartDetails();
       //window.scrollTo(0, 0);
@@ -1057,11 +1074,11 @@
     // Function to display cart details
     function displayCartDetails() {
       var cartDiv = document.getElementById("cart");
-      var cart = JSON.parse(localStorage.getItem("cart")) || [];
+      var cart = JSON.parse(localStorage.getItem(storeIDCurr+"Cart")) || [];
       //var cartProducts = cart[2];
       var grandTotal = 0;
       var cartCount = 0;
-      cartDiv.innerHTML = "<h2>Shopping Cart</h2><button onclick='checkout()'>Check Out</button>"
+      cartDiv.innerHTML = "<h2>"+store.StoreUnique+"</h2><button onclick='checkout()'>Check Out</button>"
       cartDiv.innerHTML += `<h3 id="cart-grand-total">Grand Total:  $</h3>
           `;
       console.log(cart);
@@ -1096,7 +1113,7 @@
       if (parseInt(cartCountEle.textContent)<0.1){
         alert("No items in your cart");
       } else {
-        let order="I am ordering -"+getOrderCode()+"\n";
+        let order=store.StoreUnique+"\n I am ordering -"+getOrderCode()+"\n";
         // Get the "cart" element
         const cartElement = document.getElementById("cart");
         console.log(cartElement);
@@ -1128,7 +1145,7 @@
         var whatsappLink = document.getElementById("store-wsphone");
         whatsappLink.href += "?text=" + encodeURIComponent(cartText);
         window.open(whatsappLink.href, "_blank");
-        localStorage.removeItem('cart');
+        localStorage.removeItem(storeIDCurr+'Cart');
         const orderedElements = document.querySelectorAll('.ordered');
         orderedElements.forEach((element) => {
           element.remove();
@@ -1157,7 +1174,7 @@
     }
     // Function to update quantity in the cart
     function updateQuantity(index, action) {
-      var cart = JSON.parse(localStorage.getItem("cart")) || [];
+      var cart = JSON.parse(localStorage.getItem(storeIDCurr+"Cart")) || [];
 
       if (action === "increase") {
         cart[index].quantity++;
@@ -1171,7 +1188,7 @@
       cart[index].totalPrice = (product.Price + optionsPrice) * cart[index].quantity;
 
       // Update cart data in local storage
-      localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem(storeIDCurr+"Cart", JSON.stringify(cart));
 
       // Display updated cart details
       displayCartDetails();
@@ -1179,11 +1196,11 @@
 
       // Function to delete item from the cart
     function deleteItem(index) {
-      var cart = JSON.parse(localStorage.getItem("cart")) || [];
+      var cart = JSON.parse(localStorage.getItem(storeIDCurr+"Cart")) || [];
       // Remove the item at the specified index
       cart.splice(index, 1);
       // Update cart data in local storage
-      localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem(storeIDCurr+"Cart", JSON.stringify(cart));
       // Display updated cart details
       displayCartDetails();
     }
@@ -1237,7 +1254,7 @@
             <img src ="${product.ProductImg}" alt="${product.ProductName}" class="product-img">
             <p>${product.Description}</p>
             <p>Price: $${product.Price.toFixed(2)}</p>
-            <button class="toggleOption" onclick="toggleOption('${productId}')">Make it a meal</button>
+            <button class="toggleOption" onclick="toggleOption('${productId}')">Options</button>
             <div id="options-${productId}" class="options-container">`
           for (const optionType in product.Options) {
             card.innerHTML += `<h4 style="display: none;">${optionType}:</h4>`;
