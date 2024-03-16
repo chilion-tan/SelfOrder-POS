@@ -1054,7 +1054,7 @@
       cart.push({ product, quantity: 1, totalPrice, selectedOptions: selectedOptionsArray });
       //console.log(cartText);
       localStorage.setItem(storeIDCurr+"Cart", JSON.stringify(cart));
-      toggleOption(productId);
+      toggleOption(productId,"none");
       // Display updated cart details
       displayCartDetails();
       //window.scrollTo(0, 0);
@@ -1347,7 +1347,7 @@
           return null;
         }
     // Function to toggle visibility of options when "Made it a meal" button is clicked
-    function toggleOption(productId) {
+    function toggleOption(productId,displayType) {
       const product = getProductCard(productId);
       let option = product.querySelector('.options-container');
       
@@ -1362,7 +1362,11 @@
           nextElement = nextElement.nextElementSibling;
       }
       nextElements.forEach(element => {
+        if (displayType==="none") {
+          element.style.display = 'none';
+        } else {
           element.style.display = element.style.display === 'none' ? 'block' : 'none';
+        }
       });
       console.log(nextElements);
       //button.textContent = button.textContent === 'Made it a meal' ? 'Hide Meal Options' : 'Made it a meal';
