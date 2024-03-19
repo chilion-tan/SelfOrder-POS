@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant</title>
-
+<!--?StoreID=ABC123&ProductID=DD57-->
     <style>
       @keyframes showMessage {
         0% {
@@ -716,20 +716,20 @@
     }
   },
   {"StoreId": "ABC123",
-    "StoreUnique": "Sr789CheapPizza",
-    "StoreName": "Cheap Pizza",
+    "StoreUnique": "Sr789EastWestFusion",
+    "StoreName": "East West Fusion",
     "StoreAddress": "789 Scotts Road, Far East Shopping Plaza, Singapore 123456",
     "LogoImg": "images/logo4.jpg",
     "StoreWebsite": "www.bingspizza.com",
     "GeoLocation":"4,4",
     "StorePhone": "+6592299338",
-    "PromotionMessage": "Welcome to Cheap Pizza, where we serve the best pizza in town! Try our classic Margherita, made with tomato sauce, mozzarella cheese, and basil. Or choose from our variety of other pizzas, pastas, salads, and sides. Don't forget to add a drink and a Dessert to complete your meal. For a limited time, enjoy our Promotion of buy one get one free on any pizza. Hurry, this offer won't last long!",
+    "PromotionMessage": "Welcome to Cheap Pizza and Baguette, where we serve the best pizza in town! Try our classic Margherita, made with tomato sauce, mozzarella cheese, and basil. Or choose from our variety of other pizzas, pastas, salads, and sides. Don't forget to add a drink and a Dessert to complete your meal. For a limited time, enjoy our Promotion of buy one get one free on any pizza. Hurry, this offer won't last long!",
     "Categories": ["All", "Lunch", "Dinner", "Promotion", "Special"],
     "Products": [
       {"Id": "DD41",
-        "ProductName": "Margherita Pizza",
+        "ProductName": "Margherita Baguette",
         "ProductImg" : "images/DD41.jpg",
-        "Description": "Our classic pizza, made with tomato sauce, mozzarella cheese, and basil. Served with a drink of your choice.",
+        "Description": "Our classic Baguette, made with tomato sauce, mozzarella cheese, and basil. Served with a drink of your choice.",
         "Categories": ["All", "Lunch", "Dinner", "Promotion"],
         "Price": 5.80,
         "Options": {
@@ -841,7 +841,7 @@
         },
         {
           "Id": "DD49",
-          "ProductName": "Promotional Smoothie",
+          "ProductName": "Fruit Smoothie",
           "ProductImg" : "images/DD49.jpg",
           "Description": "Refreshing mixed fruit smoothie for a limited time!",
           "Price": 6.24,
@@ -871,7 +871,7 @@
           "Id": "DD51",
           "ProductName": "Durian Cake",
           "ProductImg" : "images/DD51.jpg",
-          "Description": "Indulgent chocolate cake with a gooey molten center.",
+          "Description": "Indulgent durian cake with creamy Mao San Wang.",
           "Price": 6.28,
           "Options": {
             "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
@@ -908,9 +908,9 @@
       },
       {
           "Id": "DD54",
-          "ProductName": "Caprese Salad",
+          "ProductName": "Shrimp Laksa",
           "ProductImg" : "images/DD54.jpg",
-          "Description": "Tomatoes, fresh mozzarella, and basil with balsamic glaze.",
+          "Description": "Pigeon eggs, fresh shrimps, and basil with coconut milk.",
           "Price": 4.37,
           "Options": {
             "Drink": [ { "Coke15": 1.00 , "Drink2": 4.00 , "Drink3": 0.50 , "Drink4": 0.00 } ],
@@ -991,10 +991,10 @@
     } catch (error) {
       // Handle error gracefully
       //alert('Error: ' + error.message);
-      store = stores[0];
+      store = stores[0];//if no StoreID, then serve default first store
     }
     const storeIDCurr=store.StoreId;//current store ID
-    console.log(storeIDCurr);
+    //console.log(storeIDCurr);
     const products=store.Products;
     const storeFront = document.getElementById("store-front"); 
     const cartTotalEle = document.getElementById("cart-total"); 
@@ -1100,7 +1100,7 @@
         `;
         grandTotal += item.totalPrice;
         cartCount += item.quantity;
-        console.log(item.quantity);
+        //console.log(item.quantity);
       });
       let grandElem=document.getElementById("cart-grand-total");
       grandElem.innerHTML += grandTotal.toFixed(2);
@@ -1282,7 +1282,7 @@
             button.classList.add('clicked');
             const messageBox = document.querySelector(".message-box");
             messageBox.style.display = "flex";
-            console.log(messageBox);
+            //console.log(messageBox);
             // Remove the "clicked" class after animation ends (optional)
             setTimeout(() => {
               button.classList.remove('clicked');
@@ -1293,14 +1293,13 @@
           });
         }); 
       }//closing for displayProducts
-      //Finding the Product Card Element:
+      //Finding the Product Card Element based on URL ProductID:
       try{
-        const productIds = urlParams.get('ProductID').split(',');
+        const productId = urlParams.get('ProductID');
         // Check if both parameters are present
-        if (!productIds.length) {
+        if (productId==null) {
           throw new Error('Missing productID in URL');
         }
-        const uniqueProductId = productIds[0];
         // Find the product card element
         function findProductCard(productId) {
           const productCards = document.querySelectorAll('.product-card');
@@ -1312,16 +1311,16 @@
           }
           return null;
         }
-        const productCard = findProductCard(uniqueProductId);
+        const productCard = findProductCard(productId);
         if (!productCard) {
-          throw new Error('Product with ID ' + uniqueProductId + ' not found');
+          throw new Error('Product with ID ' + productId + ' not found');
         }
-
+        
         // Scrolling to the product card
         productCard.scrollIntoView({ behavior: 'smooth' }); 
       } catch (error) {
         // Handle error gracefully
-        //alert('Error: ' + error.message);
+        console.log('Error: ' + error.message);
         // You can also do other things like logging the error to a server or redirecting to a different page.
       }           
     });//closing document.addEventListener 
@@ -1350,10 +1349,9 @@
     function toggleOption(productId,displayType) {
       const product = getProductCard(productId);
       let option = product.querySelector('.options-container');
-      
       let nextElements = [];
       let nextElement = option.nextElementSibling; 
-      console.log(nextElement);
+      
       while (nextElement) {
           if (nextElement.classList.contains('add2Cart')) {
               break;
@@ -1368,7 +1366,7 @@
           element.style.display = element.style.display === 'none' ? 'block' : 'none';
         }
       });
-      console.log(nextElements);
+      //console.log(nextElements);
       //button.textContent = button.textContent === 'Made it a meal' ? 'Hide Meal Options' : 'Made it a meal';
     }
     </script>
