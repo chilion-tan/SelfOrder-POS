@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant</title>
-<!--?StoreID=ABC123&ProductID=DD57-->
+<!--StoreID=ABC123&ProductID=DD57-->
     <style>
       @keyframes showMessage {
         0% {
@@ -161,9 +161,9 @@
         justify-content: center;
         z-index: 999;
       }
-      #checkout-page.hidden {
+      /*#checkout-page.hidden {
         display: none;
-      }
+      }*/
       #category-nav {
         position: sticky;
         width: 90%;
@@ -321,6 +321,24 @@
         transition: background-color 0.3s, color 0.3s; /* Smooth transition on hover */
         animation: enlargeAndMove 4s ease-in-out; /* Apply animation */
       }
+      /*CSS to style form into 2 columns*/
+      #formContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #dateTimeForm {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 20px;
+      }
+
+      #formContainer>label,
+      #formContainer>input,
+      #formContainer>select {
+        width: 95%;
+      }
     /*To do - style store front to vertical*/
       @media only screen and (max-width: 500px) {
         #store-front {
@@ -362,13 +380,63 @@
         <p id="cart-close"> X </p>
         <span id="cart-total">$0.00</span>
     </div>
-      <div id="cart">
+    <!-- Checkout Page -->
+    <div id="formContainer" style="display: none;">
+      <h4>Enter Date,Time & Delivery Option</h4>
+      <form id="dateTimeForm">
+        <label style="display:inline-block;" for="dateInput">Date: mm-dd-yyyy</label>
+        <input type=date id="dateInput" required>
+        <label for="hourInput">Hour: 24HR</label>
+        <select id="hourInput">
+          <option value="05">05</option>
+          <option value="06">06</option>
+          <option value="07">07</option>
+          <option value="08">08</option>
+          <option value="09">09</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
+          <option value="17">17</option>
+          <option value="18">18</option>
+          <option value="19">19</option>
+          <option value="20">20</option>
+          <option value="21">21</option>
+          <option value="22">22</option>
+          <option value="23">23</option>
+        </select>
+        <label for="minInput">Time: Mins</label>
+        <select id="minInput">
+          <option value="00">00</option>
+          <option value="05">05</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="25">25</option>
+          <option value="30">30</option>
+          <option value="35">35</option>
+          <option value="40">40</option>
+          <option value="45">45</option>
+          <option value="50">50</option>
+          <option value="55">55</option>
+        </select>
+        <label for="deliveryOptions">Delivery Options:</label>
+        <select id="deliveryOptions">
+          <option value="Self Pick Up">Self Pick ($0.00)</option>
+          <option value="By MeetUp">MeetUp Marsiling MRT($1.00)</option>
+          <option value="By MeetUp">MeetUp Woodlands MRT($1.80)</option>
+          <option value="Deliver To Home">Deliver To Home (> $2.00)</option>
+        </select>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <div id="cart">
       <!-- Cart details will be displayed here using JavaScript -->
     </div>
-    <!-- Checkout Page -->
-    <div id="checkout-page" class="hidden">
-      <!-- ... Checkout page content ... -->
-    </div>
+    
     <div id="store-front">
       
     </div>
@@ -505,7 +573,7 @@
         {"Id": "AA09",
             "ProductName": "Burger Combo Meal",
             "ProductImg" : "images/AA09.jpg",
-            "Description": "A tasty sandwich, made with your choice of Bread, meat, cheese, and Vegetables. Served with fries and a drink of your choice.",
+            "Description": "A tasty burger, made with your choice of Bread, meat, cheese, and Vegetables. Served with fries and a drink of your choice.",
             "Categories": ["All", "Breakfast", "Lunch", "Dinner"],
             "Price": 4.20,
             "Options": {
@@ -1109,52 +1177,95 @@
     }
     //function to checkout
     function checkout() {
-      console.log(parseInt(cartCountEle.textContent));
+      //get time and delivery options
       if (parseInt(cartCountEle.textContent)<0.1){
-        alert("No items in your cart");
-      } else {
-        let order="I am ordering -"+getOrderCode()+"\n from ";
-        // Get the "cart" element
-        const cartElement = document.getElementById("cart");
-        console.log(cartElement);
-        // Function to extract text from an element and its children
-        function getTextContent(element) {
-          let text = "";
-          for (const child of element.childNodes) {
-            //console.log(child);
-            //console.log("child.nodeType= "+child.nodeType +"; Node.TEXT_NODE= "+Node.TEXT_NODE+" ;child.nodeName= "+child.nodeName);
-            if (child.nodeType === Node.TEXT_NODE) {
-              //console.log(child.textContent)
-              text += child.textContent.trim();//+"%0A"; //replace(/\s+/g, " ").trim();
-            } else if (child.nodeName.toLowerCase() !== "button") {
-              text += getTextContent(child) + "\n";
+          alert("No items in your cart");
+          return;
+      } 
+      document.getElementById("formContainer").style.display = "block";
+      var hourEle=document.getElementById("hourInput");
+      var minEle=document.getElementById("minInput");
+      var now = new Date();
+      var currHour=now.getHours()-5;
+      var currMin=Math.ceil(now.getMinutes()/5);
+      hourEle.selectedIndex=currHour;
+      minEle.selectedIndex=currMin;
+      document.getElementById("dateTimeForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent default form submission
+        var message ="";
+        var dateValue = document.getElementById("dateInput").value;
+        var hourValue = hourEle.value;
+        var minValue = minEle.value;
+        var delivery = document.getElementById("deliveryOptions").value;
+        console.log("Cur hr="+hourValue+"cur min="+minEle.value);
+        var selectedDate = new Date(dateValue);    
+        var timeRequired = {
+          "date": dateValue,
+          "time": hourValue+minValue,
+          "delivery": delivery
+        };
+        console.log(timeRequired);
+        //close user input
+        document.getElementById("formContainer").style.display = "none";
+        // prepare whatsapp message
+        console.log(parseInt(cartCountEle.textContent));
+        if (parseInt(cartCountEle.textContent)<0.1){
+          alert("No items in your cart");
+        } else {
+          let order="I am ordering -"+getOrderCode()+"\n from ";
+          // Get the "cart" element
+          const cartElement = document.getElementById("cart");
+          console.log(cartElement);
+          // Function to extract text from an element and its children
+          function getTextContent(element) {
+            let text = "";
+            for (const child of element.childNodes) {
+              //console.log("child.nodeType= "+child.nodeType +"; Node.TEXT_NODE= "+Node.TEXT_NODE+" ;child.nodeName= "+child.nodeName);
+              if (child.nodeType === Node.TEXT_NODE) {
+                //console.log(child.textContent)
+                text += child.textContent.trim();//+"%0A"; //replace(/\s+/g, " ").trim();
+              } else if (child.nodeName.toLowerCase() !== "button") {
+                text += getTextContent(child) + "\n";
+              }
             }
-          }
-            return text;
-          }
-        // Get order code and combine with text from the cart element
-        const cartText = order+getTextContent(cartElement);
-        // Create prompt message with line breaks added
-        const message = cartText.replace(/\s+/g, " ").trim(); // Remove unnecessary whitespace
-        
-        // Prompt user to send message to WhatsApp
-        //const phoneNumber = prompt("Enter phone number (including country code): ");
-        //const encodedMessage = encodeURIComponent(message); // Encode for URL
-        //const whatsAppURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-        //console.log(cartText);
-        var whatsappLink = document.getElementById("store-wsphone");
-        whatsappLink.href += "?text=" + encodeURIComponent(cartText);
-        window.open(whatsappLink.href, "_blank");
-        localStorage.removeItem(storeIDCurr+'Cart');
-        const orderedElements = document.querySelectorAll('.ordered');
-        orderedElements.forEach((element) => {
-          element.remove();
-        });
-        cartCountEle.innerHTML="0";
-        cartTotalEle.innerHTML="0";
-        let grandElem=document.getElementById("cart-grand-total");
-        grandElem.innerHTML="$0";
-      }
+              return text;
+            }
+          // Get order code and combine with text from the cart element
+          const cartText = order+getTextContent(cartElement);
+          // Create prompt message with line breaks added
+          message+=cartText.replace(/\s+/g, " ").trim(); // Remove unnecessary whitespace
+          message+="\n Required on "+timeRequired.date+" at "+timeRequired.time+ "Hr Delivery: "+timeRequired.delivery
+
+          // Construct the pre-built WhatsApp link with the encoded message
+          const encodedMessage = encodeURIComponent(message);
+          const whatsappLink = `https://wa.me/${store.StorePhone}?text=${encodedMessage}`;
+          // Open the link using window.location.href in the same tab
+          //window.location.href = whatsappLink;  
+          // Open the link in a new tab using window.open()
+          window.open(whatsappLink, "_blank")
+          localStorage.removeItem(storeIDCurr+'Cart');
+          const orderedElements = document.querySelectorAll('.ordered');
+          orderedElements.forEach((element) => {
+            element.remove();
+          });
+          cartCountEle.innerHTML="0";
+          cartTotalEle.innerHTML="0";
+          let grandElem=document.getElementById("cart-grand-total");
+          grandElem.innerHTML="$0";
+        } //end whatsapp check out
+      });
+      /*display prompt for user to custom input time
+      document.getElementById("timeInput").addEventListener("change", function() {
+        var userTimeInput = document.getElementById("userTimeInput");
+        if (this.value === "userSelect") {
+          userTimeInput.style.display = "inline";
+          userTimeInput.required = true;
+        } else {
+          userTimeInput.style.display = "none";
+          userTimeInput.required = false;
+        }
+      });*/
+      
     }
   
     // Function to display selected options in the cart
