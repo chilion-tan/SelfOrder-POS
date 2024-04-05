@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant</title>
+    <script src="util.js"></script>
 <!--StoreID=ABC123&ProductID=DD57-->
     <style>
       @keyframes showMessage {
@@ -458,12 +459,12 @@
     <script>
     const stores = [
         { "StoreId": "Store01",
-        "StoreUnique": "Oc156HomeMadeDishes",
+        "StoreUnique": "WLR330HomeMadeDishes",
         "StoreName": "Home Made Dishes",
-        "StoreAddress": "156 Orchard Road, Singapore",
+        "StoreAddress": "330 Woodlands Road, Singapore",
         "LogoImg": "images/logo1.jpg",
         "StoreWebsite": "www.homemadedishes.com",
-        "GeoLocation":"0,0",
+        "GeoLocation":{"Lat": 1.4322294525406019, "Lon": 103.77419238281311},
         "StorePhone": "+6597358539",
         "PromotionMessage": "Welcome to Home Made Dishes, where we serve the best food we would eat! Try our signature Bing Burger, made with 100% beef patty, cheese, lettuce, tomato, onion, and our Special sauce. Or choose from our variety of other burgers, salads, sandwiches, and sides. Don't forget to add a drink and a Dessert to complete your meal. For a limited time, enjoy our Promotion of 10% off any burger combo. Hurry, this offer won't last long!",
         "Categories": ["All", "Lunch", "Dinner", "Promotion", "Special"],
@@ -611,71 +612,84 @@
         "endTime": "10:00 PM"
         }
     },
-    {"StoreId": 2,
-        "StoreUnique": "Br789BingBurger",
-        "StoreName": "Bing's Pizza",
-        "StoreAddress": "789 Beach Road, Singapore",
+    {"StoreId": "Store02",
+        "StoreUnique": "WLS302HomeMadeDFood",
+        "StoreName": "Home Made Food",
+        "StoreAddress": "302 Woodlands St31, Singapore",
         "LogoImg": "images/logo2.jpg",
-        "StoreWebsite": "www.bingspizza.com",
-        "GeoLocation":"2,2",
-        "StorePhone": "+65 3456 7890",
-        "PromotionMessage": "Welcome to Bing's Pizza, where we serve the best pizza in town! Try our classic Margherita, Pepperoni, Hawaiian, or Cheese pizzas, or create your own with our variety of toppings. Don't forget to add a salad, a side, and a drink to complete your meal. For a limited time, enjoy our Promotion of buy one get one free on any pizza. Hurry, this offer won't last long!",
-        "Categories": ["All", "Lunch", "Dinner", "Promotion", "Special"],
+        "StoreWebsite": "www.homemadefood.com",
+        "GeoLocation":{"Lat": 1.387353973, "Lon": 103.8064571},
+        "StorePhone": "+6591518277",
+        "PromotionMessage": "All items at 50% discount while stock last. Welcome to Home Made Food, where we serve the best food that we love to eat! Try our creation of maki roll with our variety of fillings. Don't forget to add a side, and a drink to complete your meal. For a limited time, enjoy our Promotion of buy one get one free on any pizza. Hurry, this offer won't last long!",
+        "Categories": ["All", "Featured", "Promotion", "Special"],
         "Products": [
-        {"Id": 11,
-            "ProductName": "Margherita Pizza",
-            "ProductImg" : "images/img21.jpg",
-            "Description": "A classic pizza, made with tomato sauce, mozzarella cheese, and basil. Served with a drink of your choice.",
-            "Categories": ["All", "Lunch", "Dinner", "Promotion"],
-            "Price": 7.12,
+        {"Id": "BB01",
+            "ProductName": "Special Maki Roll",
+            "ProductImg" : "images/BB01.jpg",
+            "Description": "Specially created for Singaporean taste bud. You will want more! Filled with chili spicy Japanese Mayo, tuna, chicken floss, cucumber, carrot.",
+            "Categories": ["All", "Featured", "Special"],
+            "Price": 3.00,
             "Options": {
-            "Drink": [{"No Thanks": 0.00,"Mango Juice": 4.00,"Lime Juice": 0.50,"Coke Zero 250mL": 0.50}],
-            "Size": [{"Small": 0.00,"Medium": 5.00,"Large": 7.00}],
-            "Dessert": [{"No Thanks": 0.00, "ChengDo": 2.00, "BoBo ChaCha": 3.20}],
-            "AddOn": [{"No Thanks": 0.00,"Seafood Toufu": 2.00,"Fish Cake": 3.20,"Fruit Rojak": 2.10,"Poach Egg": 1.20}]
+            "Drink": [{"No Thanks": 0.00,"Mango Juice": 4.00,"Lime Juice": 1.00,"Coke Zero 250mL": 1.00}],
+            "Size": [{"Small": 0.00,"Medium": 4.00,"Large": 6.00}],
+            "Dessert": [{"No Thanks": 0.00, "Coconut Pudding": 2.00, "BoBo ChaCha": 2.40}],
+            "AddOn": [{"No Thanks": 0.00,"Seafood Toufu": 2.00,"Fish Cake": 3.20,"Fruit Rojak": 2.10,"Fried Egg": 0.80}]
             },
             "Diet": ["LowCarbo/Sugar"]
         },
-        {"Id": 12,
-            "ProductName": "Salad",
-            "ProductImg" : "images/img22.jpg",
-            "Description": "A fresh and healthy salad, made with lettuce, tomato, cucumber, carrot, cheese, and your choice of dressing. Served with a drink of your choice.",
-            "Categories": ["All", "Breakfast", "Lunch", "Dinner", "Special"],
-            "Price": 7.20,
+        {"Id": "BB02",
+            "ProductName": "Healthy Maki Roll",
+            "ProductImg" : "images/BB02.jpg",
+            "Description": "Lesser rice more vegetable. Fill with Egg Mayo, cucumber, carrot, cheese, and kang kong. Option to be served with a drink of your choice.",
+            "Categories": ["All", "Featured", "Special"],
+            "Price": 3.20,
             "Options": {
-            "Drink": [{"No Thanks": 0.00,"Mango Juice": 4.00,"Lime Juice": 0.50,"Coke Zero 250mL": 0.50}],
-            "Dressing": [{"Dressing1": 0.00,"Dressing2": 0.50,"Dressing3": 0.50,"Dressing4": 0.50}],
-            "AddOn": [{"No Thanks": 0.00,"Seafood Toufu": 2.00,"Fish Cake": 3.20,"Fruit Rojak": 2.10,"Poach Egg": 1.20}]
+            "Drink": [{"No Thanks": 0.00,"Mango Milk Juice": 2.80,"Lime Juice": 1.00,"Coke Zero 250mL": 1.00}],
+            "AddOn": [{"No Thanks": 0.00,"Seafood Toufu": 2.00,"Fish Cake": 1.80,"Fruit Rojak": 2.10,"Fried Egg": 1.00}]
             },
             "Diet": ["Vegetarian", "LowCarbo/Sugar"]
         },
-        {"Id": 13,
-            "ProductName": "Sandwich",
-            "ProductImg" : "images/img23.jpg",
-            "Description": "A tasty sandwich, made with your choice of Bread, meat, cheese, lettuce, tomato, onion, and our Special sauce. Served with fries and a drink of your choice.",
+        {"Id": "BB03",
+            "ProductName": "Bak Kwa Sandwich",
+            "ProductImg" : "images/BB03.jpg",
+            "Description": "A tasty sandwich, with Bak Kwa meat, lettuce and cucumber. Option to add cheese to your sandwich and cheaper drink of your choice.",
             "Categories": ["All", "Breakfast", "Lunch", "Dinner"],
-            "Price": 7.30,
+            "Price": 6.30,
             "Options": {
-            "Drink": [{"No Thanks": 0.00,"Mango Juice": 4.00,"Lime Juice": 0.50,"Coke Zero 250mL": 0.50}],
-            "Bread": [{"No Thanks": 0.00,"Italian": 0.50,"Oat": 0.50,"Grain 100%": 0.50}],
-            "Meat": [{"No Thanks": 0.00,"Chicken Nuggets": 1.00,"Fried Fish Fillet": 1.00,"Mutton Cubes": 1.00}],
-            "Cheese": [{"No Thanks": 0.00,"Mozerella": 0.50,"Parmesan": 0.50,"Cheddar": 0.50}],
-            "AddOn": [{"No Thanks": 0.00,"Seafood Toufu": 2.00,"Fish Cake": 3.20,"Fruit Rojak": 2.10,"a Egg": 1.20}]
+            "Drink": [{"No Thanks": 0.00,"Mango Juice Milk": 2.80,"Lime Juice": 1.00,"Coke Zero 250mL": 1.500}],
+            "Meat": [{"No Thanks": 0.00,"Chicken Nuggets 4pcs": 2.00,"Fried Fish Fillet": 1.00,"Hard Bolied Egg": 0.80}],
+            "Cheese": [{"No Thanks": 0.00,"Mozerella": 1.80,"Cheddar": 1.80}],
+            "AddOn": [{"No Thanks": 0.00,"Seafood Toufu 2pcs": 2.00,"Fish Cake": 1.80,"Fruit Rojak": 2.40,"Hard Bolied Egg": 0.80}]
             },
             "Diet": ["HighProtein"]
         },
-        {"Id": 14,
+        {"Id": "BB04",
+            "ProductName": "Double Hot Dog",
+            "ProductImg" : "images/BB04.jpg",
+            "Description": "Two tasty hot dog, with chicken sausage, lettuce and tomato. Option to add cheese to your hot dog and cheaper drink of your choice.",
+            "Categories": ["All", "Breakfast", "Lunch", "Dinner"],
+            "Price": 3.20,
+            "Options": {
+            "Drink": [{"No Thanks": 0.00,"Mango Juice Milk": 2.50,"Lime Juice": 0.50,"Coke Zero 250mL": 0.50}],
+            "Bread": [{"No Thanks": 0.00,"Italian": 0.50,"Oat": 0.50,"Grain 100%": 0.50}],
+            "Meat": [{"No Thanks": 0.00,"Chicken Nuggets 4pcs": 1.00,"Fried Fish Fillet": 1.00,"Hard Bolied Egg": 1.00}],
+            "Cheese": [{"No Thanks": 0.00,"Egg Mayonaise": 0.60,"Mozerella": 1.80,"Cheddar": 1.80}],
+            "AddOn": [{"No Thanks": 0.00,"Seafood Toufu": 2.00,"Fish Cake": 1.80,"Fruit Rojak": 2.10,"Fried Egg": 1.00}]
+            },
+            "Diet": ["HighProtein"]
+        },
+        {"Id": "BB05",
             "ProductName": "Wrap",
-            "ProductImg" : "images/img24.jpg",
-            "Description": "A delicious wrap, made with your choice of tortilla, meat, cheese, lettuce, tomato, onion, and our Special sauce. Served with fries and a drink of your choice.",
+            "ProductImg" : "images/BB05.jpg",
+            "Description": "A delicious wrap, made with chili spicy Japanese Mayo, tuna, chicken floss, cucumber",
             "Categories": ["All", "Breakfast", "Lunch", "Dinner"],
             "Price": 5.40,
             "Options": {
-            "Drink": [{"No Thanks": 0.00,"Mango Juice": 4.00,"Lime Juice": 0.50,"Coke Zero 250mL": 0.50}],
+            "Drink": [{"No Thanks": 0.00,"Mango Juice Milk": 2.00,"Lime Juice": 1.50,"Coke Zero 250mL": 0.50}],
             "Tortilla": [{"Tortilla1": 0.00,"Tortilla2": 0.50,"Tortilla3": 0.50,"Tortilla4": 0.50}],
             "Meat": [ { "No Thanks": 0.00 , "Chicken Nuggets": 1.00 , "Fried Fish Fillet": 1.00 , "Mutton Cubes": 1.00 } ],
             "Cheese": [ { "No Thanks": 0.00 , "Mozerella": 0.50 , "Parmesan": 0.50 , "Cheddar": 0.50 } ],
-            "AddOn": [ { "No Thanks": 0.00 , "Seafood Toufu": 2.00 , "Fish Cake": 3.20 , "Fruit Rojak": 2.10 , "Poach Egg": 1.20 } ] 
+            "AddOn": [ { "No Thanks": 0.00 , "Seafood Toufu": 2.00 , "Fish Cake": 3.20 , "Fruit Rojak": 2.10 , "Hard Bolied Egg": 0.80 } ] 
             },
             "Diet": ["LowCarbo/Sugar"]
         }
@@ -686,13 +700,13 @@
         "endTime": "10:00 PM"
         }
     },
-    { "StoreId": 3,
+    { "StoreId": "Store03",
         "StoreUnique": "Bf233BigFatBurger",
         "StoreName": "Big Fat Pizza",
         "StoreAddress": "233 Bugis Street, Singapore",
         "LogoImg": "images/logo3.jpg",
         "StoreWebsite": "www.bingspizza.com",
-        "GeoLocation":"0,4",
+        "GeoLocation":{"Lat": 1.387353973, "Lon": 103.8064571},
         "StorePhone": "+65 3456 7890",
         "PromotionMessage": "Welcome to Bing's Pizza, where we serve the best pizza in town! Try our classic Margherita, made with tomato sauce, mozzarella cheese, and basil. Or choose from our variety of other pizzas, pastas, salads, and sides. Don't forget to add a drink and a Dessert to complete your meal. For a limited time, enjoy our Promotion of buy one get one free on any pizza. Hurry, this offer won't last long!",
         "Categories": ["All", "Lunch", "Dinner", "Promotion", "Special"],
@@ -791,7 +805,7 @@
     "StoreAddress": "789 Scotts Road, Far East Shopping Plaza, Singapore 123456",
     "LogoImg": "images/logo4.jpg",
     "StoreWebsite": "www.bingspizza.com",
-    "GeoLocation":"4,4",
+    "GeoLocation":{"Lat": 1.387353973, "Lon": 103.8064571},
     "StorePhone": "+6592299338",
     "PromotionMessage": "Welcome to East West Fusion, where we serve the best food in town! Try our classic Margherita Baguette, made with tomato sauce, mozzarella cheese, and basil. Or choose from our variety of other pizzas, pastas, salads, and sides. Don't forget to add a drink and a Dessert to complete your meal. For a limited time, enjoy our Promotion of buy one get one free on any pizza. Hurry, this offer won't last long!",
     "Categories": ["All", "Lunch", "Dinner", "Promotion", "Special"],
@@ -1040,6 +1054,8 @@
      }
   }
 ]   
+    const AMKLat = 1.3692189152416219;
+    const AMKLon = 103.85013933048792;
     //localStorage.removeItem('storeidcurr+cart');
     let store= null;
     //navigate based on url query like index.html?StoreID=AB1234&ProductID=DD57
@@ -1064,6 +1080,7 @@
       store = stores[0];//if no StoreID, then serve default first store
     }
     const storeIDCurr=store.StoreId;//current store ID
+    console.log(haverDist(store.GeoLocation.Lat,store.GeoLocation.Lon,AMKLat,AMKLon));
     //console.log(storeIDCurr);
     const products=store.Products;
     const storeFront = document.getElementById("store-front"); 
