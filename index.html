@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant</title>
+    <script src="util.js"></script>
 <!--StoreID=ABC123&ProductID=DD57-->
     <style>
       @keyframes showMessage {
@@ -1079,20 +1080,6 @@
       store = stores[0];//if no StoreID, then serve default first store
     }
     const storeIDCurr=store.StoreId;//current store ID
-    function haverDist(lat1, lon1, lat2, lon2) {
-      const R = 6371; // Earth's radius in kilometers
-      const dLat = (lat2 - lat1) * (Math.PI / 180);
-      const dLon = (lon2 - lon1) * (Math.PI / 180);
-      const a =
-          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-          Math.cos(lat1 * (Math.PI / 180)) *
-              Math.cos(lat2 * (Math.PI / 180)) *
-              Math.sin(dLon / 2) *
-              Math.sin(dLon / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      const distance = R * c; // Distance in kilometers
-      return distance;
-    }
     console.log(haverDist(store.GeoLocation.Lat,store.GeoLocation.Lon,AMKLat,AMKLon));
     //console.log(storeIDCurr);
     const products=store.Products;
