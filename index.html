@@ -381,6 +381,7 @@
         <span id="cart-total">$0.00</span>
     </div>
     <!-- Checkout Page -->
+    <button onclick='checkout()' id="checkOutBtn" style="display: none;">Check Out</button>
     <div id="formContainer" style="display: none;">
       <h4>Enter Date,Time & Delivery Option</h4>
       <form id="dateTimeForm">
@@ -422,12 +423,13 @@
           <option value="45">45</option>
           <option value="50">50</option>
           <option value="55">55</option>
+          <option value="55">55</option>//added for 55 to 59 mins
         </select>
         <label for="deliveryOptions">Delivery Options:</label>
         <select id="deliveryOptions">
           <option value="Self Pick Up">Self Pick ($0.00)</option>
-          <option value="By MeetUp">MeetUp Marsiling MRT($1.00)</option>
-          <option value="By MeetUp">MeetUp Woodlands MRT($1.80)</option>
+          <option value="By MeetUp Marsiling MRT">MeetUp Marsiling MRT($1.00)</option>
+          <option value="By MeetUp Woodlands MRT">MeetUp Woodlands MRT($1.80)</option>
           <option value="Deliver To Home">Deliver To Home (> $2.00)</option>
         </select>
         <button type="submit">Submit</button>
@@ -1078,18 +1080,21 @@
       <img src="${store.LogoImg}" id="store-logo"> `
     //get store messages
     storeMsgEle.innerHTML = store.PromotionMessage;
-    //cart close event
+    //cart icon click event
     document.getElementById('cart-icon').addEventListener('click', function() {
       var cart = document.getElementById('cart'); 
+      var checkOutEle=document.getElementById("checkOutBtn");
       var cartClose=  document.getElementById('cart-close');   
       if (cart.style.display === 'none') {
         cart.style.display = 'block';
         cartClose.style.display = 'block';
+        checkOutEle.style.display='block';
         window.scrollTo(0, 0);
         } else {
           cart.style.display = 'none';
           cartClose.style.display = 'none'
-          displayCartDetails();
+          checkOutEle.style.display='none';
+          //displayCartDetails();
           window.scrollTo(0, 0);
         } 
     });
@@ -1141,12 +1146,13 @@
     }
     // Function to display cart details
     function displayCartDetails() {
+      //document.getElementById("checkOutBtn").style.display='block';
       var cartDiv = document.getElementById("cart");
       var cart = JSON.parse(localStorage.getItem(storeIDCurr+"Cart")) || [];
       //var cartProducts = cart[2];
       var grandTotal = 0;
       var cartCount = 0;
-      cartDiv.innerHTML = "<h2>"+store.StoreUnique+"</h2><button onclick='checkout()'>Check Out</button>"
+      cartDiv.innerHTML = "<h2>"+store.StoreUnique+"</h2>"
       cartDiv.innerHTML += `<h3 id="cart-grand-total">Grand Total:  $</h3>
           `;
       console.log(cart);
@@ -1187,6 +1193,9 @@
       var minEle=document.getElementById("minInput");
       var now = new Date();
       var currHour=now.getHours()-5;
+      if (currHour<0){
+        currHour=0;
+      };
       var currMin=Math.ceil(now.getMinutes()/5);
       hourEle.selectedIndex=currHour;
       minEle.selectedIndex=currMin;
@@ -1209,12 +1218,12 @@
         document.getElementById("formContainer").style.display = "none";
         // prepare whatsapp message
         console.log(parseInt(cartCountEle.textContent));
-        if (parseInt(cartCountEle.textContent)<0.1){
-          alert("No items in your cart");
-        } else {
+        if (parseInt(cartCountEle.textContent)>0.9){
+         /* alert("No items in your cart");
+        } else {*/
           let order="I am ordering -"+getOrderCode()+"\n from ";
           // Get the "cart" element
-          const cartElement = document.getElementById("cart");
+          var cartElement = document.getElementById("cart");
           console.log(cartElement);
           // Function to extract text from an element and its children
           function getTextContent(element) {
@@ -1228,14 +1237,13 @@
                 text += getTextContent(child) + "\n";
               }
             }
-              return text;
-            }
+            return text;
+          }
           // Get order code and combine with text from the cart element
           const cartText = order+getTextContent(cartElement);
           // Create prompt message with line breaks added
           message+=cartText.replace(/\s+/g, " ").trim(); // Remove unnecessary whitespace
           message+="\n Required on "+timeRequired.date+" at "+timeRequired.time+ "Hr Delivery: "+timeRequired.delivery
-
           // Construct the pre-built WhatsApp link with the encoded message
           const encodedMessage = encodeURIComponent(message);
           const whatsappLink = `https://wa.me/${store.StorePhone}?text=${encodedMessage}`;
@@ -1243,6 +1251,7 @@
           //window.location.href = whatsappLink;  
           // Open the link in a new tab using window.open()
           window.open(whatsappLink, "_blank")
+          // remove item in localStorage and cart element
           localStorage.removeItem(storeIDCurr+'Cart');
           const orderedElements = document.querySelectorAll('.ordered');
           orderedElements.forEach((element) => {
@@ -1253,6 +1262,9 @@
           let grandElem=document.getElementById("cart-grand-total");
           grandElem.innerHTML="$0";
         } //end whatsapp check out
+        document.getElementById("checkOutBtn").style.display = "none";
+        document.getElementById("cart").style.display = "none";
+        document.getElementById("cart-close").style.display = "none";
       });
       /*display prompt for user to custom input time
       document.getElementById("timeInput").addEventListener("change", function() {
